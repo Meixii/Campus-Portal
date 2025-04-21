@@ -3,6 +3,17 @@
 ## Overview
 Campus Portal is a dynamic web application for university management, supporting Admin, Professor, and Student roles. It provides secure login, user management, enrollment, attendance, to-do lists, and profile management, all powered by a Node.js/Express backend and SQLite database.
 
+## Default Accounts
+When the application is first installed and the database is initialized, the following default accounts are created:
+
+| Role      | Username | Password    | Notes                                   |
+|-----------|----------|-------------|----------------------------------------|
+| Admin     | admin    | admin123    | Full system access                      |
+| Professor | prof1    | password    | Has access to enrollment and attendance |
+| Student   | 20250001 | 20250001    | Student IDs are used as default passwords |
+
+*Note: For security reasons, it is highly recommended to change these default passwords after your first login.*
+
 ## Features
 
 ### Admin

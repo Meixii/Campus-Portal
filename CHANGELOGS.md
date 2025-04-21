@@ -1,5 +1,11 @@
 ## Recent Updates
 
+## Update #32
+- Added Default Accounts section to README.md with login credentials
+- Included table with usernames and passwords for Admin, Professor, and Student accounts
+- Added security note recommending password changes after first login
+- Enhanced documentation to make initial setup more user-friendly
+
 ## Update #31
 - Created detailed HOSTING.md guide for deploying Campus Portal on Ubuntu Server
 - Added comprehensive setup instructions for Nginx web server configuration
