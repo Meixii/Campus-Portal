@@ -16,13 +16,13 @@
         }
 
         body {
-            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            background: linear-gradient(135deg, #FFFBEE 0%, #FFF8E1 100%);
             padding: 20px;
             min-height: 100vh;
         }
 
         .navbar {
-            background: #00BCD4;
+            background: #F0C14B;
             color: #fff;
             padding: 1rem;
             display: flex;
@@ -44,7 +44,7 @@
         .navbar a {
             color: #fff;
             text-decoration: none;
-            margin: 0 1rem;
+            margin: 0 0.5rem;
             font-weight: 500;
         }
 
@@ -58,22 +58,22 @@
         }
 
         .welcome-section {
-            background: #F7FDFF;
+            background: #FFFEF5;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            box-shadow: 0 6px 20px rgba(179, 157, 0, 0.08);
             margin-bottom: 25px;
             text-align: center;
         }
 
         h2 {
-            color: #006064;
+            color: #B88A00;
             margin-bottom: 10px;
             font-weight: 500;
         }
 
         p {
-            color: #607D8B;
+            color: #6B6247;
             line-height: 1.6;
             margin-bottom: 0;
         }
@@ -85,10 +85,10 @@
         }
 
         .card {
-            background: #F7FDFF;
+            background: #FFFEF5;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            box-shadow: 0 6px 20px rgba(179, 157, 0, 0.08);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -102,25 +102,25 @@
 
         .card-icon {
             font-size: 2.5rem;
-            color: #00BCD4;
+            color: #F0C14B;
             margin-bottom: 15px;
         }
 
         .card h3 {
-            color: #006064;
+            color: #B88A00;
             margin-bottom: 10px;
             font-weight: 500;
         }
 
         .card p {
-            color: #607D8B;
+            color: #6B6247;
             margin-bottom: 20px;
             font-size: 0.9rem;
         }
 
         .card a {
-            background: linear-gradient(90deg, #00BCD4, #26C6DA);
-            color: #FFFFFF;
+            background: linear-gradient(90deg, #F0C14B, #F5D77F);
+            color: #5A4500;
             padding: 10px 20px;
             border-radius: 50px;
             text-decoration: none;
@@ -129,7 +129,7 @@
         }
 
         .card a:hover {
-            background: linear-gradient(90deg, #0097A7, #00ACC1);
+            background: linear-gradient(90deg, #D4A93F, #F0C14B);
             transform: translateY(-2px);
         }
 
@@ -144,6 +144,44 @@
             
             .welcome-section, .card {
                 padding: 20px;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 1rem 0.5rem;
+            }
+            
+            .navbar-title {
+                margin-bottom: 0.8rem;
+            }
+            
+            .navbar div:last-child {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .navbar a {
+                margin: 0.3rem 0.4rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                padding: 15px;
+            }
+            
+            .card-icon {
+                font-size: 2rem;
+                margin-bottom: 10px;
+            }
+            
+            .card h3 {
+                font-size: 1.1rem;
+            }
+            
+            .card p {
+                font-size: 0.85rem;
             }
         }
     </style>

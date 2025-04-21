@@ -16,13 +16,13 @@
         }
 
         body {
-            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            background: linear-gradient(135deg, #FFFBEE 0%, #FFF8E1 100%);
             padding: 20px;
             min-height: 100vh;
         }
 
         .navbar {
-            background: #00BCD4;
+            background: #F0C14B;
             color: #fff;
             padding: 1rem;
             display: flex;
@@ -44,7 +44,7 @@
         .navbar a {
             color: #fff;
             text-decoration: none;
-            margin: 0 1rem;
+            margin: 0 0.5rem;
             font-weight: 500;
         }
 
@@ -61,10 +61,10 @@
         }
 
         .card {
-            background: #F7FDFF;
+            background: #FFFEF5;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            box-shadow: 0 6px 20px rgba(179, 157, 0, 0.08);
             transition: transform 0.3s ease;
         }
 
@@ -73,7 +73,7 @@
         }
 
         h2 {
-            color: #006064;
+            color: #B88A00;
             margin-bottom: 15px;
             font-weight: 500;
             font-size: 1.5rem;
@@ -93,29 +93,29 @@
         }
 
         label {
-            color: #006064;
+            color: #B88A00;
             font-weight: 500;
             font-size: 0.9rem;
         }
 
         input, select, textarea {
             padding: 10px;
-            border: 2px solid #B2EBF2;
+            border: 2px solid #F5D77F;
             border-radius: 8px;
             font-size: 1rem;
-            background: #E0F7FA;
-            color: #006064;
+            background: #FFFEF5;
+            color: #6B6247;
             transition: border-color 0.3s ease;
         }
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #00BCD4;
+            border-color: #F0C14B;
         }
 
         button {
-            background: linear-gradient(90deg, #00BCD4, #26C6DA);
-            color: #FFFFFF;
+            background: linear-gradient(90deg, #F0C14B, #F5D77F);
+            color: #5A4500;
             padding: 12px 20px;
             border: none;
             border-radius: 8px;
@@ -127,7 +127,7 @@
         }
 
         button:hover {
-            background: linear-gradient(90deg, #0097A7, #00ACC1);
+            background: linear-gradient(90deg, #D4A93F, #F0C14B);
             transform: translateY(-2px);
         }
 
@@ -138,13 +138,13 @@
         }
 
         .attendance-item {
-            background: #E0F7FA;
+            background: #FFF9E6;
             padding: 15px;
             border-radius: 8px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            box-shadow: 0 2px 8px rgba(0, 96, 100, 0.1);
+            box-shadow: 0 2px 8px rgba(179, 157, 0, 0.05);
             transition: transform 0.2s ease;
         }
 
@@ -161,13 +161,13 @@
         .attendance-date {
             font-weight: 500;
             font-size: 1.1rem;
-            color: #006064;
+            color: #B88A00;
         }
 
         .attendance-subject {
             font-weight: 500;
             font-size: 0.9rem;
-            color: #00838F;
+            color: #D68600;
             margin-top: 4px;
         }
 
@@ -187,13 +187,13 @@
         }
 
         .attendance-notes {
-            color: #006064;
+            color: #6B6247;
             font-size: 0.9rem;
             opacity: 0.8;
         }
 
         .attendance-timestamp {
-            color: #006064;
+            color: #6B6247;
             font-size: 0.8rem;
             opacity: 0.6;
             text-align: right;
@@ -213,9 +213,9 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(0, 188, 212, 0.3);
+            border: 3px solid rgba(240, 193, 75, 0.3);
             border-radius: 50%;
-            border-top-color: #00BCD4;
+            border-top-color: #F0C14B;
             animation: spin 1s ease-in-out infinite;
             margin-right: 10px;
         }
@@ -229,7 +229,36 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            color: #006064;
+            color: #B88A00;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 1rem 0.5rem;
+            }
+            
+            .navbar-title {
+                margin-bottom: 0.8rem;
+            }
+            
+            .navbar div:last-child {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .navbar a {
+                margin: 0.3rem 0.4rem;
+            }
+            
+            .container {
+                max-width: 100%;
+            }
+            
+            .card {
+                padding: 15px;
+            }
         }
 
         @media (max-width: 600px) {
@@ -253,6 +282,22 @@
             button {
                 width: 100%;
                 padding: 12px;
+            }
+            
+            .attendance-item {
+                padding: 12px;
+            }
+            
+            .attendance-date {
+                font-size: 1rem;
+            }
+            
+            .attendance-subject {
+                font-size: 0.85rem;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
             }
         }
     </style>
@@ -686,7 +731,7 @@
                     // Determine record source with professor name if available
                     const recordedBy = record.recordedBy === 'professor' ? 
                         `<span style="color: #6C5CE7; font-size: 0.8rem;"><i class="fas fa-user-tie"></i> Recorded by ${professorName || 'professor'}</span>` : 
-                        '<span style="color: #00ACC1; font-size: 0.8rem;"><i class="fas fa-user"></i> Self-recorded</span>';
+                        '<span style="color: #D68600; font-size: 0.8rem;"><i class="fas fa-user"></i> Self-recorded</span>';
                     
                     attendanceItem.innerHTML = `
                         <div class="attendance-header">

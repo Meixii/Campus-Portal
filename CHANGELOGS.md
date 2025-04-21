@@ -1,5 +1,33 @@
 ## Recent Updates
 
+## Update #31
+- Created detailed HOSTING.md guide for deploying Campus Portal on Ubuntu Server
+- Added comprehensive setup instructions for Nginx web server configuration
+- Included step-by-step guide for configuring Raspberry Pi 3 as a WiFi hotspot
+- Added port forwarding setup between VirtualBox VM and Raspberry Pi
+- Created instructions for setting up domain name (campusportal.local)
+- Added troubleshooting section for common deployment issues
+- Included security considerations and maintenance instructions
+- Provided detailed networking configuration for VM to Raspberry Pi communication
+
+## Update #30
+- Adjusted student interface color scheme to use softer, less vibrant colors for better eye comfort
+- Reduced contrast and brightness of yellow theme for extended viewing comfort
+- Changed button colors to use darker text for better readability
+- Softened box shadows to create a more subtle visual hierarchy
+- Updated color palette to use more muted, pastel-like tones across all student pages
+- Maintained consistent color relationships while reducing overall intensity
+- Modified all hover effects to work harmoniously with the new softer color scheme
+
+## Update #29
+- Changed student interface color scheme to a lighter yellow-ish theme for a more friendly user experience
+- Improved mobile responsiveness across all student pages (dashboard, profile, attendance, to-do)
+- Enhanced navbar layout on mobile devices with better spacing and touch-friendly elements
+- Optimized form controls and card layouts for smaller screens
+- Added additional media queries for very small devices (under 480px)
+- Improved typography and spacing consistency across all student pages
+- Updated color contrast for better accessibility and readability
+
 ## Update #28
 - Fixed issue with professor names not appearing in student attendance records
 - Added debugging information to help identify data structure issues
