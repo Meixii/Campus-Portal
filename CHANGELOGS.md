@@ -1,5 +1,12 @@
 ## Recent Updates
 
+## Update #33
+- Fixed database initialization order in server.js
+- Resolved error with subjects table not being initialized properly
+- Improved application startup sequence by using timeouts between initialization steps
+- Consolidated table creation in a single location for better maintainability
+- Fixed "no such table: subjects" error on first run
+
 ## Update #32
 - Added Default Accounts section to README.md with login credentials
 - Included table with usernames and passwords for Admin, Professor, and Student accounts

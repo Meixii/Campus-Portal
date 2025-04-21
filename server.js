@@ -60,6 +60,41 @@ const initDb = () => {
         subject_id INTEGER,
         UNIQUE(student_id, subject_id)
     )`);
+    
+    // Create attendance tables
+    db.run(`CREATE TABLE IF NOT EXISTS attendance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        student_id TEXT,
+        professor_username TEXT,
+        subject_id INTEGER NOT NULL,
+        status TEXT,
+        date TEXT,
+        timestamp TEXT,
+        FOREIGN KEY (subject_id) REFERENCES subjects(id),
+        FOREIGN KEY (student_id) REFERENCES users(student_id),
+        FOREIGN KEY (professor_username) REFERENCES users(username)
+    )`);
+    
+    db.run(`CREATE TABLE IF NOT EXISTS student_self_attendance (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        student_id TEXT,
+        status TEXT,
+        date TEXT,
+        notes TEXT,
+        timestamp TEXT,
+        subject_id INTEGER NOT NULL,
+        FOREIGN KEY (subject_id) REFERENCES subjects(id),
+        FOREIGN KEY (student_id) REFERENCES users(student_id)
+    )`);
+    
+    // Initialize test accounts after tables are created
+    setTimeout(() => {
+        initTestAccounts();
+        // Initialize subjects after tables are created
+        setTimeout(() => {
+            initializeBasicSubjects();
+        }, 500);
+    }, 500);
 };
 initDb();
 
@@ -84,7 +119,6 @@ function initTestAccounts() {
         }
     });
 }
-initTestAccounts();
 
 // Student ID auto-generation
 function generateStudentId() {
@@ -923,20 +957,6 @@ app.post('/api/professor/attendance', requireRole('professor'), (req, res) => {
     });
 });
 
-// Create attendance table if it doesn't exist
-db.run(`CREATE TABLE IF NOT EXISTS attendance (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    student_id TEXT,
-    professor_username TEXT,
-    subject_id INTEGER NOT NULL,
-    status TEXT,
-    date TEXT,
-    timestamp TEXT,
-    FOREIGN KEY (subject_id) REFERENCES subjects(id),
-    FOREIGN KEY (student_id) REFERENCES users(student_id),
-    FOREIGN KEY (professor_username) REFERENCES users(username)
-)`);
-
 // Student Self-Attendance API
 app.post('/api/student/attendance', (req, res) => {
     if (!req.session.user || req.session.user.role !== 'student') return res.status(403).json({ error: 'Forbidden' });
@@ -1033,19 +1053,6 @@ app.get('/api/student/attendance', (req, res) => {
     });
 });
 
-// Create student self-attendance table if it doesn't exist
-db.run(`CREATE TABLE IF NOT EXISTS student_self_attendance (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    student_id TEXT,
-    status TEXT,
-    date TEXT,
-    notes TEXT,
-    timestamp TEXT,
-    subject_id INTEGER NOT NULL,
-    FOREIGN KEY (subject_id) REFERENCES subjects(id),
-    FOREIGN KEY (student_id) REFERENCES users(student_id)
-)`);
-
 // API Endpoints for Subjects
 
 // List all subjects
@@ -1103,9 +1110,6 @@ function initializeBasicSubjects() {
         }
     });
 }
-
-// Call at startup
-initializeBasicSubjects();
 
 // Add a new subject (admin only)
 app.post('/api/subjects', (req, res) => {
