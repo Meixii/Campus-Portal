@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #00BCD4;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .navbar-title {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .navbar-title i {
+            margin-right: 0.5rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .card {
+            background: #F7FDFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            color: #006064;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        button {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0097A7, #00ACC1);
+            transform: translateY(-2px);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0, 96, 100, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #B2EBF2;
+        }
+
+        th {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: white;
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) {
+            background-color: #E0F7FA;
+        }
+
+        tr:hover {
+            background-color: #B2EBF2;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 2px solid #B2EBF2;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #E0F7FA;
+            color: #006064;
+            margin: 5px 0;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00BCD4;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #006064;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .success {
+            color: #388e3c;
+        }
+
+        .warning {
+            color: #f57c00;
+        }
+
+        .error {
+            color: #d32f2f;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 0.75rem;
+            }
+            
+            .navbar-title {
+                margin-bottom: 0.5rem;
+            }
+            
+            .navbar a {
+                margin: 0.25rem 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-title"><i class="fas fa-cogs"></i> Admin Control Panel</div>
+        <div>
+            <a href="dashboardAdmin.html"><i class="fas fa-home"></i> Home</a>
+            <a href="controlPanel.html"><i class="fas fa-sliders-h"></i> Control Panel</a>
+            <a href="addProfessor.html"><i class="fas fa-chalkboard-teacher"></i> Add Professor</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>User Management</h2>
+            <table id="usersTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTableBody"></tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2>Professors List</h2>
+            <div class="action-buttons">
+                <button onclick="location.href='addProfessor.html'">Add New Professor</button>
+            </div>
+            <table id="professorsTable">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Courses</th>
+                        <th>Sections</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="professorsTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Load users data
+        fetchUsers();
+        
+        // Load professors data  
+        fetchProfessors();
+        
+        function fetchUsers() {
+            fetch('/api/admin/users')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('usersTableBody');
+                    tbody.innerHTML = '';
+                    
+                    data.forEach(user => {
+                        const tr = document.createElement('tr');
+                        
+                        tr.innerHTML = `
+                            <td>${user.username}</td>
+                            <td>${user.role}</td>
+                            <td>${user.status}</td>
+                            <td>${user.name || '-'}</td>
+                            <td>
+                                ${user.status === 'pending' 
+                                  ? `<button onclick="authorizeUser('${user.username}', true)">Authorize</button>` 
+                                  : `<button onclick="authorizeUser('${user.username}', false)">Deauthorize</button>`}
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching users:', error);
+                    alert('Failed to load users. Please try again.');
+                });
+        }
+        
+        function fetchProfessors() {
+            fetch('/api/admin/professors')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('professorsTableBody');
+                    tbody.innerHTML = '';
+                    
+                    data.forEach(professor => {
+                        const tr = document.createElement('tr');
+                        
+                        tr.innerHTML = `
+                            <td>${professor.username}</td>
+                            <td>${professor.name || '-'}</td>
+                            <td>${professor.courses || '-'}</td>
+                            <td>${professor.sections || '-'}</td>
+                            <td>
+                                <button onclick="editProfessor('${professor.username}')">Edit</button>
+                                <button onclick="deleteProfessor('${professor.username}')">Delete</button>
+                            </td>
+                        `;
+                        
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching professors:', error);
+                    alert('Failed to load professors. Please try again.');
+                });
+        }
+        
+        function authorizeUser(username, authorize) {
+            fetch('/api/admin/authorize', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    username: username,
+                    authorize: authorize
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`User ${authorize ? 'authorized' : 'deauthorized'} successfully!`);
+                    fetchUsers(); // Refresh the table
+                } else {
+                    alert('Failed to update user authorization.');
+                }
+            })
+            .catch(error => {
+                console.error('Error authorizing user:', error);
+                alert('An error occurred while updating authorization.');
+            });
+        }
+        
+        function editProfessor(username) {
+            window.location.href = `addProfessor.html?username=${username}`;
+        }
+        
+        function deleteProfessor(username) {
+            if (confirm(`Are you sure you want to delete professor ${username}?`)) {
+                fetch(`/api/admin/professors/${username}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Professor deleted successfully!');
+                        fetchProfessors(); // Refresh the table
+                    } else {
+                        alert(`Failed to delete professor: ${data.message}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting professor:', error);
+                    alert('An error occurred while deleting the professor.');
+                });
+            }
+        }
+        
+        function logout() {
+            fetch('/api/logout', { method: 'POST' })
+                .then(() => {
+                    window.location.href = '/index.html';
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                    alert('Failed to log out. Please try again.');
+                });
+        }
+    </script>
+</body>
+</html>

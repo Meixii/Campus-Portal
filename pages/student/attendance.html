@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Self Attendance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #00BCD4;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .navbar-title {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-title i {
+            margin-right: 0.5rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: #F7FDFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            color: #006064;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .attendance-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            color: #006064;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 2px solid #B2EBF2;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #E0F7FA;
+            color: #006064;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #00BCD4;
+        }
+
+        button {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0097A7, #00ACC1);
+            transform: translateY(-2px);
+        }
+
+        .attendance-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .attendance-item {
+            background: #E0F7FA;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 96, 100, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .attendance-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .attendance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attendance-date {
+            font-weight: 500;
+            font-size: 1.1rem;
+            color: #006064;
+        }
+
+        .attendance-subject {
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: #00838F;
+            margin-top: 4px;
+        }
+
+        .status-present {
+            color: #4CAF50;
+            font-weight: 500;
+        }
+
+        .status-late {
+            color: #FF9800;
+            font-weight: 500;
+        }
+
+        .status-absent {
+            color: #F44336;
+            font-weight: 500;
+        }
+
+        .attendance-notes {
+            color: #006064;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .attendance-timestamp {
+            color: #006064;
+            font-size: 0.8rem;
+            opacity: 0.6;
+            text-align: right;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-controls select {
+            flex: 1;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 188, 212, 0.3);
+            border-radius: 50%;
+            border-top-color: #00BCD4;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #006064;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 15px;
+                border-radius: 10px;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-title"><i class="fas fa-clipboard-check"></i> Self Attendance</div>
+        <div>
+            <a href="dashboardStudent.html"><i class="fas fa-home"></i> Home</a>
+            <a href="studentProfile.html"><i class="fas fa-id-card"></i> Profile</a>
+            <a href="attendance.html"><i class="fas fa-clipboard-check"></i> Attendance</a>
+            <a href="todo.html"><i class="fas fa-tasks"></i> To-Do</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>Record Your Attendance</h2>
+            <div class="attendance-form">
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject" required>
+                        <option value="">-- Select Subject --</option>
+                        <!-- Subjects will be loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" required>
+                        <option value="present">Present</option>
+                        <option value="late">Late</option>
+                        <option value="absent">Absent</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Notes (Optional)</label>
+                    <textarea id="notes" rows="3" placeholder="Add any notes about your attendance..."></textarea>
+                </div>
+                <button onclick="attendanceManager.recordAttendance()">Submit Attendance</button>
+            </div>
+        </div>
+        <div class="card">
+            <h2>Your Attendance History</h2>
+            <div class="filter-controls">
+                <select id="subjectFilter" onchange="attendanceManager.filterAttendance()">
+                    <option value="">All Subjects</option>
+                    <!-- Subject filters will be loaded dynamically -->
+                </select>
+            </div>
+            <div class="attendance-list" id="attendanceList">
+                <!-- Attendance records will be displayed here -->
+                <div class="loading-text">
+                    <div class="loading-spinner"></div>
+                    <span>Loading attendance records...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function logout() {
+            fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = '/index.html');
+        }
+        
+        class AttendanceManager {
+            constructor() {
+                this.attendance = [];
+                this.subjects = [];
+                this.studentInfo = null;
+                this.loadStudentInfo()
+                    .then(() => {
+                        this.loadStudentSubjects();
+                        this.loadAttendance();
+                    });
+                // Set today's date as default
+                document.getElementById('date').valueAsDate = new Date();
+            }
+            
+            async loadStudentInfo() {
+                try {
+                    const res = await fetch('/api/me');
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch student info');
+                    }
+                    this.studentInfo = await res.json();
+                    console.log('Student info loaded:', this.studentInfo);
+                } catch (error) {
+                    console.error('Error loading student info:', error);
+                }
+            }
+            
+            async loadStudentSubjects() {
+                try {
+                    // Fetch the subjects assigned to this student
+                    const res = await fetch('/api/student/subjects');
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch student subjects');
+                    }
+                    
+                    const data = await res.json();
+                    
+                    // Handle different response formats
+                    if (Array.isArray(data)) {
+                        this.subjects = data;
+                    } else if (data.subjects && Array.isArray(data.subjects)) {
+                        this.subjects = data.subjects;
+                    } else {
+                        throw new Error('Unexpected student subjects data format');
+                    }
+                    
+                    console.log('Student subjects loaded:', this.subjects);
+                    this.renderSubjects();
+                } catch (error) {
+                    console.error('Error loading student subjects:', error);
+                    // Try backup method
+                    this.loadAllAvailableSubjects();
+                }
+            }
+            
+            async loadAllAvailableSubjects() {
+                try {
+                    const res = await fetch('/api/subjects');
+                    if (!res.ok) {
+                        throw new Error('Failed to fetch all subjects');
+                    }
+                    
+                    const data = await res.json();
+                    
+                    if (Array.isArray(data)) {
+                        this.subjects = data;
+                    } else if (data.subjects && Array.isArray(data.subjects)) {
+                        this.subjects = data.subjects;
+                    } else {
+                        throw new Error('Unexpected general subjects data format');
+                    }
+                    
+                    console.log('All subjects loaded as fallback:', this.subjects);
+                    this.renderSubjects();
+                } catch (error) {
+                    console.error('Error loading all subjects:', error);
+                    // Fallback with some common subjects if API fails
+                    this.subjects = [
+                        { id: 1, name: 'Mathematics' },
+                        { id: 2, name: 'Science' },
+                        { id: 3, name: 'English' },
+                        { id: 4, name: 'History' },
+                        { id: 5, name: 'Computer Science' }
+                    ];
+                    this.renderSubjects();
+                }
+            }
+            
+            renderSubjects() {
+                const subjectSelect = document.getElementById('subject');
+                const subjectFilter = document.getElementById('subjectFilter');
+                
+                // Clear existing options except the first one
+                while (subjectSelect.options.length > 1) {
+                    subjectSelect.remove(1);
+                }
+                
+                // Clear existing filter options except the first one
+                while (subjectFilter.options.length > 1) {
+                    subjectFilter.remove(1);
+                }
+                
+                // Add subjects to dropdown
+                this.subjects.forEach(subject => {
+                    // Determine if we're using subject_id or id property
+                    const subjectId = subject.subject_id || subject.id;
+                    const subjectName = subject.name || subject.subject_name;
+                    const subjectDescription = subject.description || '';
+                    
+                    if (subjectId && subjectName) {
+                        const option = document.createElement('option');
+                        option.value = subjectId;
+                        option.textContent = `${subjectName} - ${subjectDescription}`;
+                        subjectSelect.appendChild(option);
+                        
+                        // Add to filter dropdown as well
+                        const filterOption = option.cloneNode(true);
+                        subjectFilter.appendChild(filterOption);
+                    }
+                });
+            }
+            
+            async loadAttendance() {
+                try {
+                    // First try to get student ID if not already fetched
+                    if (!this.studentInfo || !this.studentInfo.id) {
+                        await this.loadStudentInfo();
+                    }
+                    
+                    // Get student ID from profile
+                    let studentId = null;
+                    try {
+                        const profileResponse = await fetch('/api/student/profile');
+                        if (profileResponse.ok) {
+                            const profileData = await profileResponse.json();
+                            studentId = profileData.student_id;
+                            console.log('Got student ID from profile:', studentId);
+                        }
+                    } catch (err) {
+                        console.error('Error getting student profile:', err);
+                    }
+                    
+                    if (!studentId) {
+                        throw new Error('Could not determine student ID');
+                    }
+                    
+                    // Get self-recorded attendance
+                    console.log('Fetching self-attendance for student ID:', studentId);
+                    const selfAttendanceUrl = `/api/student/attendance?student_id=${studentId}`;
+                    const selfAttendanceResponse = await fetch(selfAttendanceUrl);
+                    
+                    let selfAttendance = [];
+                    if (selfAttendanceResponse.ok) {
+                        const data = await selfAttendanceResponse.json();
+                        
+                        // Handle different response formats
+                        if (Array.isArray(data)) {
+                            selfAttendance = data;
+                        } else if (data.attendance && Array.isArray(data.attendance)) {
+                            selfAttendance = data.attendance;
+                        } else if (data.records && Array.isArray(data.records)) {
+                            selfAttendance = data.records;
+                        }
+                        
+                        // Mark these as self-recorded
+                        selfAttendance.forEach(record => {
+                            record.recordedBy = 'self';
+                        });
+                        
+                        console.log('Self-attendance records:', selfAttendance.length);
+                    } else {
+                        console.error('Failed to fetch self-attendance:', await selfAttendanceResponse.text());
+                    }
+                    
+                    // Get professor-recorded attendance
+                    console.log('Fetching professor-recorded attendance for student ID:', studentId);
+                    const professorAttendanceUrl = `/api/student/professor-attendance?student_id=${studentId}`;
+                    const professorAttendanceResponse = await fetch(professorAttendanceUrl);
+                    
+                    let professorAttendance = [];
+                    if (professorAttendanceResponse.ok) {
+                        const data = await professorAttendanceResponse.json();
+                        console.log('Raw professor attendance data:', data);
+                        
+                        // Handle different response formats
+                        if (Array.isArray(data)) {
+                            professorAttendance = data;
+                        } else if (data.attendance && Array.isArray(data.attendance)) {
+                            professorAttendance = data.attendance;
+                        } else if (data.records && Array.isArray(data.records)) {
+                            professorAttendance = data.records;
+                        }
+                        
+                        // Debug: Check if professor names are included
+                        if (professorAttendance.length > 0) {
+                            console.log('Sample professor record:', professorAttendance[0]);
+                        }
+                        
+                        // Mark these as professor-recorded
+                        professorAttendance.forEach(record => {
+                            record.recordedBy = 'professor';
+                        });
+                        
+                        console.log('Professor-recorded attendance records:', professorAttendance.length);
+                    } else {
+                        console.log('No professor-recorded attendance found or API not available');
+                    }
+                    
+                    // Combine both attendance sources
+                    this.attendance = [...selfAttendance, ...professorAttendance];
+                    console.log('Combined attendance records:', this.attendance.length);
+                    
+                    this.renderAttendance();
+                } catch (error) {
+                    console.error('Error loading attendance:', error);
+                    document.getElementById('attendanceList').innerHTML = 
+                        '<div class="attendance-item"><p>Failed to load attendance records. Please try again later.</p></div>';
+                }
+            }
+            
+            async recordAttendance() {
+                // First try to get student ID if not already fetched
+                if (!this.studentInfo || !this.studentInfo.id) {
+                    await this.loadStudentInfo();
+                }
+                
+                const subject_id = document.getElementById('subject').value;
+                const date = document.getElementById('date').value;
+                const status = document.getElementById('status').value;
+                const notes = document.getElementById('notes').value;
+                
+                if (!subject_id) {
+                    alert('Please select a subject!');
+                    return;
+                }
+                
+                if (!date) {
+                    alert('Please select a date!');
+                    return;
+                }
+                
+                // Prepare data for the API
+                const attendanceData = {
+                    subject_id,
+                    date,
+                    status,
+                    notes
+                };
+                
+                // Add student_id if available
+                if (this.studentInfo && this.studentInfo.id) {
+                    attendanceData.student_id = this.studentInfo.id;
+                }
+                
+                try {
+                    console.log('Submitting attendance:', attendanceData);
+                    const res = await fetch('/api/student/attendance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(attendanceData)
+                    });
+                    
+                    if (!res.ok) {
+                        const errorData = await res.json().catch(() => ({}));
+                        throw new Error(errorData.message || 'Failed to record attendance');
+                    }
+                    
+                    const result = await res.json();
+                    alert(result.message || 'Attendance recorded successfully!');
+                    document.getElementById('notes').value = '';
+                    this.loadAttendance();
+                } catch (error) {
+                    console.error('Error recording attendance:', error);
+                    alert(error.message || 'Failed to record attendance. Please try again later.');
+                }
+            }
+            
+            filterAttendance() {
+                this.renderAttendance();
+            }
+            
+            renderAttendance() {
+                const attendanceList = document.getElementById('attendanceList');
+                attendanceList.innerHTML = '';
+                
+                if (!this.attendance || this.attendance.length === 0) {
+                    attendanceList.innerHTML = '<div class="attendance-item"><p>No attendance records found.</p></div>';
+                    return;
+                }
+                
+                // Get the filter value
+                const subjectFilter = document.getElementById('subjectFilter').value;
+                
+                // Filter records based on subject if filter is applied
+                let records = this.attendance;
+                if (subjectFilter) {
+                    records = this.attendance.filter(record => {
+                        // Support different property names for subject ID
+                        const recordSubjectId = record.subject_id || record.subject;
+                        return recordSubjectId == subjectFilter;
+                    });
+                    
+                    if (records.length === 0) {
+                        attendanceList.innerHTML = '<div class="attendance-item"><p>No attendance records found for this subject.</p></div>';
+                        return;
+                    }
+                }
+                
+                // Sort by date (most recent first)
+                records.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                records.forEach(record => {
+                    const attendanceItem = document.createElement('div');
+                    attendanceItem.className = 'attendance-item';
+                    
+                    const recordStatus = record.status || 'unknown';
+                    const statusClass = 
+                        recordStatus.toLowerCase() === 'present' ? 'status-present' : 
+                        recordStatus.toLowerCase() === 'late' ? 'status-late' : 'status-absent';
+                    
+                    const recordDate = record.date || record.attendance_date;
+                    const formattedDate = new Date(recordDate).toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    
+                    // Find subject info
+                    let subjectName = 'Unknown Subject';
+                    let subjectDescription = '';
+                    const recordSubjectId = record.subject_id || record.subject;
+                    
+                    // Try to get subject info from the record first
+                    if (record.subject_code || record.subject_name) {
+                        subjectName = record.subject_code || record.subject_name;
+                        subjectDescription = record.subject_description || '';
+                    } else {
+                        // Fall back to looking up in the subjects array
+                        const subject = this.subjects.find(s => {
+                            const subjectId = s.subject_id || s.id;
+                            return subjectId == recordSubjectId;
+                        });
+                        
+                        if (subject) {
+                            subjectName = subject.name || subject.subject_name || subject.code || 'Unknown';
+                            subjectDescription = subject.description || '';
+                        }
+                    }
+                    
+                    const recordTimestamp = record.timestamp || record.created_at || record.date || new Date().toISOString();
+                    
+                    // Get professor name - try multiple possible properties
+                    let professorName = '';
+                    if (record.professor_name) {
+                        professorName = record.professor_name;
+                    } else if (record.professorName) {
+                        professorName = record.professorName;
+                    } else if (record.professor) {
+                        professorName = typeof record.professor === 'string' ? record.professor : 
+                                        (record.professor.name || record.professor.username || '');
+                    }
+                    
+                    // Determine record source with professor name if available
+                    const recordedBy = record.recordedBy === 'professor' ? 
+                        `<span style="color: #6C5CE7; font-size: 0.8rem;"><i class="fas fa-user-tie"></i> Recorded by ${professorName || 'professor'}</span>` : 
+                        '<span style="color: #00ACC1; font-size: 0.8rem;"><i class="fas fa-user"></i> Self-recorded</span>';
+                    
+                    attendanceItem.innerHTML = `
+                        <div class="attendance-header">
+                            <span class="attendance-date">${formattedDate}</span>
+                            <span class="${statusClass}">${recordStatus.toUpperCase()}</span>
+                        </div>
+                        <div class="attendance-subject"><i class="fas fa-book"></i> ${subjectName}${subjectDescription ? ` - ${subjectDescription}` : ''}</div>
+                        ${record.notes ? `<div class="attendance-notes">${record.notes}</div>` : ''}
+                        <div class="attendance-timestamp">
+                            ${recordedBy}<br>
+                            Recorded: ${new Date(recordTimestamp).toLocaleString()}
+                        </div>
+                    `;
+                    
+                    attendanceList.appendChild(attendanceItem);
+                });
+            }
+        }
+        
+        const attendanceManager = new AttendanceManager();
+    </script>
+</body>
+</html> 

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body { 
+            background: linear-gradient(135deg, #F3F0FF 0%, #E6E0FF 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .navbar {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+        }
+        
+        .navbar-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .navbar-title i {
+            margin-right: 0.5rem;
+        }
+        
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+        
+        .navbar a:hover {
+            transform: translateY(-2px);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #6C5CE7;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 1.8rem;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+        
+        h1:hover {
+            transform: translateY(-5px);
+        }
+        
+        h2 {
+            color: #6C5CE7;
+            margin: 20px 0 15px;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+        
+        .section-container {
+            margin-bottom: 30px;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .section-container:hover {
+            transform: translateY(-5px);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #F8F7FF;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.1);
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #E6E0FF;
+            color: #333;
+        }
+        
+        th {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #FFFFFF;
+            font-weight: 500;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6C5CE7;
+            font-weight: 500;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E6E0FF;
+            border-radius: 8px;
+            background: #F8F7FF;
+            color: #333;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #6C5CE7;
+        }
+        
+        button {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: linear-gradient(90deg, #5B4ED1, #7D63DA);
+            transform: translateY(-2px);
+        }
+        
+        .assign-btn {
+            background: linear-gradient(90deg, #4CAF50, #66BB6A);
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            border-radius: 6px;
+        }
+        
+        .assign-btn:hover {
+            background: linear-gradient(90deg, #388E3C, #4CAF50);
+        }
+        
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .navbar-title {
+                margin-bottom: 10px;
+            }
+            
+            .navbar a {
+                margin: 5px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="navbar-title"><i class="fas fa-book"></i> Subject Management</div>
+            <div>
+                <a href="dashboardProf.html"><i class="fas fa-home"></i> Home</a>
+                <a href="professorProfile.html"><i class="fas fa-id-card"></i> Profile</a>
+                <a href="subjects.html"><i class="fas fa-book"></i> Subjects</a>
+                <a href="enrollment.html"><i class="fas fa-user-plus"></i> Enrollment</a>
+                <a href="attendance.html"><i class="fas fa-clipboard-check"></i> Attendance</a>
+                <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+        
+        <h1>Subject Management</h1>
+        
+        <div class="section-container">
+            <h2>Your Assigned Subjects</h2>
+            <table id="subjectsTable">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Subject Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody id="subjectsTableBody">
+                    <!-- Subjects will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="section-container">
+            <h2>Assign Subject to Student</h2>
+            <div class="form-group">
+                <label for="subjectSelect">Subject</label>
+                <select id="subjectSelect">
+                    <option value="">Select a subject</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="studentSelect">Student</label>
+                <select id="studentSelect">
+                    <option value="">Select a student</option>
+                </select>
+            </div>
+            <button id="assignBtn">Assign Subject to Student</button>
+        </div>
+        
+        <div class="section-container">
+            <h2>Enrolled Students by Subject</h2>
+            <div class="form-group">
+                <label for="subjectFilterSelect">Select Subject</label>
+                <select id="subjectFilterSelect">
+                    <option value="">All Subjects</option>
+                </select>
+            </div>
+            <table id="studentsTable">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Subject</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody">
+                    <!-- Students will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        // Logout function
+        function logout() {
+            fetch('/api/logout', { method: 'POST' })
+                .then(() => window.location.href = '/index.html');
+        }
+        
+        class SubjectManager {
+            constructor() {
+                this.subjects = [];
+                this.students = [];
+                this.enrollments = {};
+                
+                this.initializeEventListeners();
+                this.loadSubjects();
+                this.loadStudents();
+            }
+            
+            initializeEventListeners() {
+                document.getElementById('assignBtn').addEventListener('click', () => this.assignSubjectToStudent());
+                document.getElementById('subjectFilterSelect').addEventListener('change', () => this.filterStudentsBySubject());
+            }
+            
+            async loadSubjects() {
+                try {
+                    // Fetch the professor's username first (from session)
+                    const userResponse = await fetch('/api/me');
+                    const userData = await userResponse.json();
+                    
+                    // Then fetch subjects assigned to the professor
+                    const response = await fetch(`/api/professors/${userData.username}/subjects`);
+                    if (!response.ok) throw new Error('Failed to fetch subjects');
+                    
+                    this.subjects = await response.json();
+                    this.populateSubjectDropdowns();
+                    this.renderSubjectsTable();
+                } catch (error) {
+                    console.error('Error loading subjects:', error);
+                    // Show empty state instead of mock data
+                    this.subjects = [];
+                    this.populateSubjectDropdowns();
+                    this.renderSubjectsTable();
+                }
+            }
+            
+            async loadStudents() {
+                try {
+                    const response = await fetch('/api/professor/students');
+                    if (!response.ok) throw new Error('Failed to fetch students');
+                    
+                    this.students = await response.json();
+                    this.populateStudentDropdown();
+                    this.loadEnrollments();
+                } catch (error) {
+                    console.error('Error loading students:', error);
+                    // Show empty state instead of mock data
+                    this.students = [];
+                    this.populateStudentDropdown();
+                    this.loadEnrollments();
+                }
+            }
+            
+            async loadEnrollments() {
+                // Initialize enrollments object to track which subjects each student is enrolled in
+                this.enrollments = {};
+                
+                for (const student of this.students) {
+                    try {
+                        const response = await fetch(`/api/students/${student.student_id}/subjects`);
+                        if (!response.ok) throw new Error(`Failed to fetch enrollments for ${student.student_id}`);
+                        
+                        const subjects = await response.json();
+                        this.enrollments[student.student_id] = subjects;
+                    } catch (error) {
+                        console.error(`Error loading enrollments for ${student.student_id}:`, error);
+                        this.enrollments[student.student_id] = [];
+                    }
+                }
+                
+                this.renderStudentsTable();
+            }
+            
+            populateSubjectDropdowns() {
+                const subjectSelect = document.getElementById('subjectSelect');
+                const filterSelect = document.getElementById('subjectFilterSelect');
+                
+                // Clear existing options
+                subjectSelect.innerHTML = '<option value="">Select a subject</option>';
+                filterSelect.innerHTML = '<option value="">All Subjects</option>';
+                
+                // Add subjects to dropdowns
+                this.subjects.forEach(subject => {
+                    const option1 = document.createElement('option');
+                    option1.value = subject.id;
+                    option1.textContent = `${subject.code} - ${subject.name}`;
+                    subjectSelect.appendChild(option1);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = subject.id;
+                    option2.textContent = `${subject.code} - ${subject.name}`;
+                    filterSelect.appendChild(option2);
+                });
+            }
+            
+            populateStudentDropdown() {
+                const studentSelect = document.getElementById('studentSelect');
+                studentSelect.innerHTML = '<option value="">Select a student</option>';
+                
+                this.students.forEach(student => {
+                    const option = document.createElement('option');
+                    option.value = student.student_id;
+                    option.textContent = `${student.student_id} - ${student.name}`;
+                    studentSelect.appendChild(option);
+                });
+            }
+            
+            renderSubjectsTable() {
+                const tbody = document.getElementById('subjectsTableBody');
+                tbody.innerHTML = '';
+                
+                if (this.subjects.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="empty-message">No subjects assigned to you</td></tr>';
+                    return;
+                }
+                
+                this.subjects.forEach(subject => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${subject.code}</td>
+                        <td>${subject.name}</td>
+                        <td>${subject.description || 'No description'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+            
+            renderStudentsTable() {
+                const tbody = document.getElementById('studentsTableBody');
+                tbody.innerHTML = '';
+                
+                const selectedSubjectId = document.getElementById('subjectFilterSelect').value;
+                let hasEnrollments = false;
+                
+                // Flatten the enrollments data for display
+                const enrollmentRows = [];
+                
+                this.students.forEach(student => {
+                    const subjectsForStudent = this.enrollments[student.student_id] || [];
+                    
+                    if (subjectsForStudent.length === 0) {
+                        // Only add if no filter is applied
+                        if (!selectedSubjectId) {
+                            enrollmentRows.push({
+                                student_id: student.student_id,
+                                name: student.name,
+                                subject: 'Not enrolled in any subject'
+                            });
+                        }
+                    } else {
+                        subjectsForStudent.forEach(subject => {
+                            // Apply filter if selected
+                            if (!selectedSubjectId || selectedSubjectId == subject.id) {
+                                enrollmentRows.push({
+                                    student_id: student.student_id,
+                                    name: student.name,
+                                    subject: `${subject.code} - ${subject.name}`
+                                });
+                                hasEnrollments = true;
+                            }
+                        });
+                    }
+                });
+                
+                if (enrollmentRows.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="empty-message">No enrollments found</td></tr>';
+                    return;
+                }
+                
+                // Sort by student ID
+                enrollmentRows.sort((a, b) => a.student_id.localeCompare(b.student_id));
+                
+                // Render rows
+                enrollmentRows.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.student_id}</td>
+                        <td>${row.name}</td>
+                        <td>${row.subject}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+            
+            filterStudentsBySubject() {
+                this.renderStudentsTable();
+            }
+            
+            async assignSubjectToStudent() {
+                const subjectId = document.getElementById('subjectSelect').value;
+                const studentId = document.getElementById('studentSelect').value;
+                
+                if (!subjectId || !studentId) {
+                    alert('Please select both a subject and a student');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch(`/api/students/${studentId}/subjects`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ subject_id: subjectId }),
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        alert('Subject assigned to student successfully!');
+                        // Reload enrollments to refresh the table
+                        this.loadEnrollments();
+                    } else {
+                        alert(`Failed to assign subject: ${result.error}`);
+                    }
+                } catch (error) {
+                    console.error('Error assigning subject:', error);
+                    alert('Error assigning subject. Please try again later.');
+                }
+            }
+        }
+        
+        // Initialize the subject manager when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const subjectManager = new SubjectManager();
+            window.subjectManager = subjectManager; // Expose for debugging
+        });
+    </script>
+</body>
+</html> 

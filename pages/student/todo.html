@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #00BCD4;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: #F7FDFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .create-card h2, .tasks-card h2 {
+            color: #006064;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .task-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #B2EBF2;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #E0F7FA;
+            color: #006064;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #00BCD4;
+        }
+
+        button {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0097A7, #00ACC1);
+            transform: translateY(-2px);
+        }
+
+        .task-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .task-item {
+            background: #E0F7FA;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 96, 100, 0.1);
+            transition: transform 0.2s ease, opacity 0.2s ease;
+        }
+
+        .task-item.completed {
+            opacity: 0.7;
+            background: #B2EBF2;
+        }
+
+        .task-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #00BCD4;
+        }
+
+        .task-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .task-text {
+            flex: 1;
+            color: #006064;
+            font-size: 0.95rem;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+        }
+
+        .task-meta {
+            color: #006064;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .delete-btn {
+            background: linear-gradient(90deg, #4DD0E1, #80DEEA);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+        }
+
+        .delete-btn:hover {
+            background: linear-gradient(90deg, #26C6DA, #4DD0E1);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .card {
+                padding: 15px;
+                border-radius: 10px;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            .task-input {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .task-item {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .task-meta {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-title"><i class="fas fa-tasks"></i> To-Do List</div>
+        <div>
+            <a href="dashboardStudent.html"><i class="fas fa-home"></i> Home</a>
+            <a href="studentProfile.html"><i class="fas fa-id-card"></i> Profile</a>
+            <a href="attendance.html"><i class="fas fa-clipboard-check"></i> Attendance</a>
+            <a href="todo.html"><i class="fas fa-tasks"></i> To-Do</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card create-card">
+            <h2>Add New Task</h2>
+            <div class="task-input">
+                <input type="text" id="taskInput" placeholder="Enter a new task" required>
+                <button onclick="todoManager.addTask()">Add Task</button>
+            </div>
+        </div>
+        <div class="card tasks-card">
+            <h2>Your Tasks</h2>
+            <div class="task-list" id="taskList"></div>
+        </div>
+    </div>
+    <script>
+        function logout() {
+            fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = '/index.html');
+        }
+        class TodoManager {
+            constructor() {
+                this.loadTasks();
+            }
+            async loadTasks() {
+                const res = await fetch('/api/student/todo');
+                this.tasks = await res.json();
+                this.renderTasks();
+            }
+            async addTask() {
+                const taskInput = document.getElementById('taskInput');
+                const description = taskInput.value.trim();
+                if (!description) { alert('Please enter a task!'); return; }
+                await fetch('/api/student/todo', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ description })
+                });
+                taskInput.value = '';
+                this.loadTasks();
+            }
+            async toggleTask(index) {
+                const task = this.tasks[index];
+                await fetch(`/api/student/todo/${task.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ completed: !task.completed })
+                });
+                this.loadTasks();
+            }
+            async deleteTask(index) {
+                const task = this.tasks[index];
+                await fetch(`/api/student/todo/${task.id}`, { method: 'DELETE' });
+                this.loadTasks();
+            }
+            renderTasks() {
+                const taskList = document.getElementById('taskList');
+                taskList.innerHTML = '';
+                this.tasks.forEach((task, index) => {
+                    const taskItem = document.createElement('div');
+                    taskItem.className = `task-item ${task.completed ? 'completed' : ''}`;
+                    taskItem.innerHTML = `
+                        <div class="task-header">
+                            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="todoManager.toggleTask(${index})">
+                            <span class="task-text ${task.completed ? 'completed' : ''}">${task.description}</span>
+                            <button class="delete-btn" onclick="todoManager.deleteTask(${index})">Delete</button>
+                        </div>
+                        <div class="task-meta">
+                            <span>Created: ${task.created_at ? new Date(task.created_at).toLocaleString() : '-'}</span><br>
+                            <span>Completed: ${task.completed_at ? new Date(task.completed_at).toLocaleString() : '-'}</span>
+                        </div>
+                    `;
+                    taskList.appendChild(taskItem);
+                });
+            }
+        }
+        const todoManager = new TodoManager();
+    </script>
+</body>
+</html>

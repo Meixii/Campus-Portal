@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            padding: 40px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 520px;
+            background: #F7FDFF;
+            padding: 40px 36px 36px 36px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0, 96, 100, 0.18);
+            transition: transform 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-4px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #006064;
+            margin-bottom: 28px;
+            font-weight: 600;
+            font-size: 2.1rem;
+            letter-spacing: 1px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background: #E0F7FA;
+            color: #006064;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: background 0.3s ease;
+        }
+
+        .tab.active {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+        }
+
+        .tab:hover:not(.active) {
+            background: #B2EBF2;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #006064;
+            font-weight: 400;
+            font-size: 0.9rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="text"], input[type="password"], input[type="text"] {
+            width: 100%;
+            padding: 10px 40px 10px 10px;
+            border: 2px solid #B2EBF2;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #E0F7FA;
+            color: #006064;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00BCD4;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #006064;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #00BCD4;
+        }
+
+        button {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: background 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0097A7, #00ACC1);
+            transform: translateY(-2px);
+        }
+
+        .save-btn, .logout-btn {
+            background: linear-gradient(90deg, #00838F, #00ACC1);
+        }
+
+        .save-btn:hover, .logout-btn:hover {
+            background: linear-gradient(90deg, #006064, #00838F);
+        }
+
+        .file-section {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #B2EBF2;
+            border-radius: 8px;
+            background: #E0F7FA;
+            color: #006064;
+            font-size: 0.9rem;
+        }
+
+        .note {
+            color: #006064;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            opacity: 0.8;
+            text-align: center;
+        }
+
+        .session-section {
+            margin-top: 20px;
+        }
+
+        h2 {
+            color: #006064;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #E0F7FA;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #B2EBF2;
+            color: #006064;
+            font-size: 0.85rem;
+        }
+
+        th {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+            font-weight: 500;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #006064;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        #loginForm {
+            display: block;
+        }
+
+        #loginForm.active {
+            display: block;
+        }
+
+        .info-box {
+            background-color: #E1F5FE;
+            border-left: 4px solid #039BE5;
+            padding: 12px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            color: #01579B;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .tab {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+
+            input, button {
+                font-size: 0.9rem;
+                padding: 8px;
+            }
+
+            .toggle-password {
+                font-size: 0.9rem;
+                right: 8px;
+            }
+
+            th, td {
+                font-size: 0.8rem;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Campus Portal</h1>
+        <form id="loginForm" autocomplete="off" style="margin-top: 24px;">
+            <div class="form-group">
+                <label for="loginUsername">Username</label>
+                <input type="text" id="loginUsername" required placeholder="Enter your username" style="margin-bottom: 18px; padding: 12px; font-size: 1.1rem;">
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="loginPassword" required autocomplete="current-password" style="background-image: none; margin-bottom: 18px; padding: 12px; font-size: 1.1rem;">
+                </div>
+            </div>
+            <div class="info-box">
+                <strong>Note for students:</strong> Your default password is the same as your Student ID. Please change your password after your first login.
+            </div>
+            <button type="submit" style="margin-top: 10px;">Login</button>
+        </form>
+        <div id="feedback" style="margin: 16px 0; text-align: center; color: #d32f2f; font-weight: 500;"></div>
+        <div class="session-section" id="sessionSection" style="display: none;">
+            <div class="welcome-message" id="welcomeMessage"></div>
+            <button class="logout-btn" onclick="loginManager.logout()">Logout</button>
+            <h2>Session History</h2>
+            <table id="sessionTable">
+                <thead>
+                    <tr>
+                        <th>Login Time</th>
+                        <th>Logout Time</th>
+                    </tr>
+                </thead>
+                <tbody id="sessionTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        class LoginManager {
+            constructor() {
+                this.currentUser = null;
+                this.setupForms();
+                this.render();
+            }
+
+            showFeedback(msg, color = '#d32f2f') {
+                const feedback = document.getElementById('feedback');
+                feedback.textContent = msg;
+                feedback.style.color = color;
+                setTimeout(() => { feedback.textContent = ''; }, 3500);
+            }
+
+            async login(username, password) {
+                if (!username || !password) {
+                    this.showFeedback('Please fill in all fields.');
+                    return false;
+                }
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, password })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        this.currentUser = result.username;
+                        this.showFeedback('Login successful! Redirecting...', '#388e3c');
+                        setTimeout(() => {
+                            if (result.role === 'admin') {
+                                window.location.href = '/pages/admin/dashboardAdmin.html';
+                            } else if (result.role === 'professor') {
+                                window.location.href = '/pages/professor/dashboardProf.html';
+                            } else if (result.role === 'student') {
+                                window.location.href = '/pages/student/dashboardStudent.html';
+                            }
+                        }, 800);
+                        return true;
+                    } else {
+                        this.showFeedback(result.error || 'Login failed!');
+                        return false;
+                    }
+                } catch (err) {
+                    this.showFeedback('Login error: ' + err.message);
+                    return false;
+                }
+            }
+
+            logout() {
+                if (this.currentUser) {
+                    this.currentUser = null;
+                    this.render();
+                }
+            }
+
+            showForm(formType) {
+                document.getElementById('registerForm').classList.toggle('active', formType === 'register');
+                document.getElementById('loginForm').classList.toggle('active', formType === 'login');
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.textContent.toLowerCase() === formType);
+                });
+                document.getElementById('feedback').textContent = '';
+            }
+
+            setupForms() {
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('loginUsername').value.trim();
+                    const password = document.getElementById('loginPassword').value;
+                    this.login(username, password).then(success => {
+                        if (success) {
+                            document.getElementById('loginForm').reset();
+                        }
+                    });
+                });
+            }
+
+            render() {
+                const sessionSection = document.getElementById('sessionSection');
+                const welcomeMessage = document.getElementById('welcomeMessage');
+                const sessionTableBody = document.getElementById('sessionTableBody');
+
+                if (this.currentUser) {
+                    sessionSection.style.display = 'block';
+                    welcomeMessage.textContent = `Welcome, ${this.currentUser}!`;
+                    document.getElementById('registerForm').style.display = 'none';
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.querySelector('.tabs').style.display = 'none';
+
+                    sessionTableBody.innerHTML = '';
+                    (this.sessions[this.currentUser] || []).forEach(session => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${session.loginTime}</td>
+                            <td>${session.logoutTime || '-'}</td>
+                        `;
+                        sessionTableBody.appendChild(row);
+                    });
+                } else {
+                    sessionSection.style.display = 'none';
+                    document.getElementById('registerForm').style.display = '';
+                    document.getElementById('loginForm').style.display = '';
+                    document.querySelector('.tabs').style.display = 'flex';
+                    this.showForm('login');
+                }
+            }
+        }
+
+        // Initialize login manager
+        const loginManager = new LoginManager();
+    </script>
+</body>
+</html>

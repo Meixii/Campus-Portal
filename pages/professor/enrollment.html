@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Enrollment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #F3F0FF 0%, #E6E0FF 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+        }
+
+        .navbar-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .navbar-title i {
+            margin-right: 0.5rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .navbar a:hover {
+            transform: translateY(-2px);
+        }
+
+        h1 {
+            text-align: center;
+            color: #6C5CE7;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 1.8rem;
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        h1:hover {
+            transform: translateY(-5px);
+        }
+
+        .form-container, .batch-enrollment, .student-list {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .form-container:hover, .batch-enrollment:hover, .student-list:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #6C5CE7;
+            margin: 20px 0 15px;
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6C5CE7;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E6E0FF;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #F8F7FF;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6C5CE7;
+        }
+
+        button {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin: 5px 5px 5px 0;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #5B4ED1, #7D63DA);
+            transform: translateY(-2px);
+        }
+
+        .status {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .error {
+            background-color: #FFEBEE;
+            color: #C62828;
+            border: 1px solid #FFCDD2;
+        }
+
+        .success {
+            background-color: #E8F5E9;
+            color: #2E7D32;
+            border: 1px solid #C8E6C9;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #F8F7FF;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #E6E0FF;
+            color: #333;
+        }
+
+        th {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #FFFFFF;
+            font-weight: 500;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #EFECFF;
+        }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            padding: 12px 24px;
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 15px;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .file-label:hover {
+            background: linear-gradient(90deg, #5B4ED1, #7D63DA);
+            transform: translateY(-2px);
+        }
+
+        .file-name {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            .container {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.2rem;
+            }
+
+            input, button, select, textarea {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+
+            th, td {
+                font-size: 0.85rem;
+                padding: 8px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .navbar-title {
+                margin-bottom: 10px;
+            }
+            
+            .navbar a {
+                margin: 5px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="navbar">
+            <div class="navbar-title"><i class="fas fa-user-plus"></i> Student Enrollment</div>
+            <div>
+                <a href="dashboardProf.html"><i class="fas fa-home"></i> Home</a>
+                <a href="professorProfile.html"><i class="fas fa-id-card"></i> Profile</a>
+                <a href="subjects.html"><i class="fas fa-book"></i> Subjects</a>
+                <a href="enrollment.html"><i class="fas fa-user-plus"></i> Enrollment</a>
+                <a href="attendance.html"><i class="fas fa-clipboard-check"></i> Attendance</a>
+                <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </div>
+        
+        <h1>Student Enrollment System</h1>
+        
+        <div class="form-container">
+            <h2>Enroll a New Student</h2>
+            
+            <form id="enrollmentForm">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="student_id">Student ID</label>
+                    <input type="text" id="student_id" name="student_id" disabled>
+                    <small class="field-hint">Auto-generated upon enrollment</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="course">Course</label>
+                    <select id="course" name="course" required>
+                        <option value="">Select a course</option>
+                        <option value="BSCS">BS Computer Science</option>
+                        <option value="BSIT">BS Information Technology</option>
+                        <option value="BSIS">BS Information Systems</option>
+                        <option value="BSEMC">BS Entertainment and Multimedia Computing</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="year_section">Year & Section</label>
+                    <select id="year_section" name="year_section" required>
+                        <option value="">Select year and section</option>
+                        <option value="1A">1A</option>
+                        <option value="1B">1B</option>
+                        <option value="2A">2A</option>
+                        <option value="2B">2B</option>
+                        <option value="3A">3A</option>
+                        <option value="3B">3B</option>
+                        <option value="4A">4A</option>
+                        <option value="4B">4B</option>
+                    </select>
+                </div>
+                
+                <button type="submit">Enroll Student</button>
+            </form>
+            
+            <div id="status" class="status hidden"></div>
+        </div>
+        
+        <div class="batch-enrollment">
+            <h2>Batch Enrollment</h2>
+            <form id="batchEnrollmentForm">
+                <div class="form-group">
+                    <div class="file-upload">
+                        <label for="csvFile" class="file-label">
+                            <i class="fas fa-file-upload"></i> Choose CSV File
+                        </label>
+                        <input type="file" id="csvFile" accept=".csv" required>
+                        <span class="file-name" id="fileName">No file chosen</span>
+                    </div>
+                </div>
+                <button type="submit">Upload and Enroll</button>
+            </form>
+            <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
+                CSV format: name,email,username,password,course,year_section
+            </p>
+        </div>
+        
+        <div class="student-list">
+            <h2>Recently Enrolled Students</h2>
+            <table id="studentTable">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Course</th>
+                        <th>Year & Section</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Logout function
+        function logout() {
+            fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = '/index.html');
+        }
+
+        class EnrollmentManager {
+            constructor() {
+                this.students = [];
+                this.setupEventListeners();
+                this.loadStudents();
+            }
+
+            setupEventListeners() {
+                // Enrollment form submission
+                document.getElementById('enrollmentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.enrollStudent();
+                });
+
+                // Batch enrollment form submission
+                document.getElementById('batchEnrollmentForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.batchEnrollStudents();
+                });
+
+                // File input change (to display file name)
+                document.getElementById('csvFile').addEventListener('change', (e) => {
+                    const fileName = e.target.files.length > 0 ? e.target.files[0].name : 'No file chosen';
+                    document.getElementById('fileName').textContent = fileName;
+                });
+            }
+
+            async loadStudents() {
+                try {
+                    const response = await fetch('/api/professor/students');
+                    if (!response.ok) throw new Error('Failed to fetch students');
+                    
+                    this.students = await response.json();
+                    this.renderStudentTable();
+                } catch (error) {
+                    console.error('Error loading students:', error);
+                    this.showStatus('Error loading students. Please try again later.', 'error');
+                }
+            }
+
+            renderStudentTable() {
+                const tbody = document.getElementById('studentTableBody');
+                tbody.innerHTML = '';
+                
+                if (this.students.length === 0) {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 5;
+                    cell.textContent = 'No students enrolled yet';
+                    cell.style.textAlign = 'center';
+                    row.appendChild(cell);
+                    tbody.appendChild(row);
+                    return;
+                }
+                
+                // Sort students by enrollment date (if available) or student_id
+                const sortedStudents = [...this.students].sort((a, b) => {
+                    if (a.enrollment_date && b.enrollment_date) {
+                        return new Date(b.enrollment_date) - new Date(a.enrollment_date);
+                    }
+                    return a.student_id.localeCompare(b.student_id);
+                });
+                
+                // Take only the most recent 10 students
+                const recentStudents = sortedStudents.slice(0, 10);
+                
+                recentStudents.forEach(student => {
+                    const row = document.createElement('tr');
+                    
+                    const idCell = document.createElement('td');
+                    idCell.textContent = student.student_id;
+                    
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = student.name;
+                    
+                    const usernameCell = document.createElement('td');
+                    usernameCell.textContent = student.username;
+                    
+                    const courseCell = document.createElement('td');
+                    courseCell.textContent = student.course;
+                    
+                    const yearSectionCell = document.createElement('td');
+                    yearSectionCell.textContent = student.year_section;
+                    
+                    row.appendChild(idCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(usernameCell);
+                    row.appendChild(courseCell);
+                    row.appendChild(yearSectionCell);
+                    
+                    tbody.appendChild(row);
+                });
+            }
+
+            async enrollStudent() {
+                const form = document.getElementById('enrollmentForm');
+                const formData = new FormData(form);
+                
+                const studentData = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    username: formData.get('username'),
+                    password: formData.get('password'),
+                    course: formData.get('course'),
+                    year_section: formData.get('year_section')
+                };
+                
+                try {
+                    const response = await fetch('/api/professor/enroll', {
+                        method: 'POST',
+                        headers: { 
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: JSON.stringify(studentData)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        this.showStatus(`Student enrolled successfully with ID: ${result.student_id}`, 'success');
+                        
+                        // Display the auto-generated student ID in the form
+                        document.getElementById('student_id').value = result.student_id || '';
+                        
+                        // Reset form except for the student_id field which displays the generated ID
+                        const inputs = form.querySelectorAll('input:not(#student_id), select');
+                        inputs.forEach(input => input.value = '');
+                        
+                        // Add the new student to our local array and refresh the table
+                        if (result.student) {
+                            this.students.unshift(result.student);
+                            this.renderStudentTable();
+                        } else {
+                            // If we didn't get a student object back, reload all students
+                            this.loadStudents();
+                        }
+                    } else {
+                        this.showStatus(`Enrollment failed: ${result.message}`, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error enrolling student:', error);
+                    this.showStatus('Server error. Please try again later.', 'error');
+                }
+            }
+
+            async batchEnrollStudents() {
+                const fileInput = document.getElementById('csvFile');
+                if (!fileInput.files.length) {
+                    this.showStatus('Please select a CSV file first', 'error');
+                    return;
+                }
+                
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = async (e) => {
+                    try {
+                        const contents = e.target.result;
+                        const rows = contents.split('\n');
+                        
+                        if (rows.length < 2) {
+                            this.showStatus('The CSV file appears to be empty or invalid', 'error');
+                            return;
+                        }
+                        
+                        this.showStatus('Processing batch enrollment...', 'success');
+                        
+                        // Skip header row if it exists
+                        const startRow = rows[0].includes('name,email') ? 1 : 0;
+                        const students = [];
+                        
+                        for (let i = startRow; i < rows.length; i++) {
+                            const row = rows[i].trim();
+                            if (!row) continue;
+                            
+                            const cols = row.split(',');
+                            if (cols.length >= 6) {
+                                students.push({
+                                    name: cols[0].trim(),
+                                    email: cols[1].trim(),
+                                    username: cols[2].trim(),
+                                    password: cols[3].trim(),
+                                    course: cols[4].trim(),
+                                    year_section: cols[5].trim()
+                                });
+                            }
+                        }
+                        
+                        if (students.length === 0) {
+                            this.showStatus('No valid student records found in the CSV file', 'error');
+                            return;
+                        }
+                        
+                        // Send the batch to the server
+                        const response = await fetch('/api/admin/batch-enroll', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ students })
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (response.ok) {
+                            this.showStatus(`Successfully enrolled ${result.enrolled} students`, 'success');
+                            document.getElementById('batchEnrollmentForm').reset();
+                            document.getElementById('fileName').textContent = 'No file chosen';
+                            
+                            // Reload the student list
+                            this.loadStudents();
+                        } else {
+                            this.showStatus(`Batch enrollment failed: ${result.message}`, 'error');
+                        }
+                    } catch (error) {
+                        console.error('Error processing CSV file:', error);
+                        this.showStatus('Error processing the CSV file. Please check the format and try again.', 'error');
+                    }
+                };
+                
+                reader.readAsText(file);
+            }
+
+            showStatus(message, type) {
+                const statusElement = document.getElementById('status');
+                statusElement.textContent = message;
+                statusElement.className = `status ${type}`;
+                statusElement.classList.remove('hidden');
+                
+                // Hide the status message after 5 seconds
+                setTimeout(() => {
+                    statusElement.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        // Initialize enrollment manager when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            const enrollmentManager = new EnrollmentManager();
+            // Expose to global scope for debugging
+            window.enrollmentManager = enrollmentManager;
+        });
+    </script>
+</body>
+</html>

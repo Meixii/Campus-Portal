@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #F3F0FF 0%, #E6E0FF 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.2);
+        }
+
+        .navbar-title {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .navbar-title i {
+            margin-right: 0.5rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+            transition: transform 0.2s ease;
+            display: inline-block;
+        }
+
+        .navbar a:hover {
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #6C5CE7;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        h3 {
+            color: #6C5CE7;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .profile-info {
+            margin-top: 20px;
+        }
+
+        .profile-field {
+            background: #F8F7FF;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .profile-field:hover {
+            transform: translateY(-2px);
+        }
+
+        .field-label {
+            font-weight: 500;
+            color: #6C5CE7;
+            font-size: 0.95rem;
+        }
+
+        .field-value {
+            color: #333;
+            font-weight: 400;
+        }
+
+        .handled-courses {
+            margin-top: 25px;
+        }
+
+        .course-item {
+            background: #F8F7FF;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(108, 92, 231, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .course-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .course-name {
+            font-weight: 500;
+            color: #6C5CE7;
+        }
+
+        .student-count {
+            background: #6C5CE7;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #6C5CE7;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E6E0FF;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #F8F7FF;
+            color: #333;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #6C5CE7;
+        }
+
+        button {
+            background: linear-gradient(90deg, #6C5CE7, #8E70ED);
+            color: #FFFFFF;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s ease, transform 0.2s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #5B4ED1, #7D63DA);
+            transform: translateY(-2px);
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            
+            body {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .profile-field {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .field-value {
+                align-self: flex-start;
+                width: 100%;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 15px;
+            }
+            
+            .navbar-title {
+                margin-bottom: 10px;
+            }
+            
+            .navbar a {
+                margin: 5px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-title"><i class="fas fa-id-card"></i> Professor Profile</div>
+        <div>
+            <a href="dashboardProf.html"><i class="fas fa-home"></i> Home</a>
+            <a href="professorProfile.html"><i class="fas fa-id-card"></i> Profile</a>
+            <a href="subjects.html"><i class="fas fa-book"></i> Subjects</a>
+            <a href="enrollment.html"><i class="fas fa-user-plus"></i> Enrollment</a>
+            <a href="attendance.html"><i class="fas fa-clipboard-check"></i> Attendance</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid-container">
+            <div class="card">
+                <h2>Your Profile</h2>
+                <div class="profile-info" id="profileInfo">
+                    <div class="profile-field">
+                        <span class="field-label">Name</span>
+                        <span class="field-value" id="name">Loading...</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="field-label">Username</span>
+                        <span class="field-value" id="username">Loading...</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="field-label">Role</span>
+                        <span class="field-value">Professor</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="field-label">Courses</span>
+                        <span class="field-value" id="courses">Loading...</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="field-label">Sections</span>
+                        <span class="field-value" id="sections">Loading...</span>
+                    </div>
+                    <div class="profile-field">
+                        <span class="field-label">Last Login</span>
+                        <span class="field-value" id="lastLogin">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="handled-courses" id="handledCourses">
+                    <h3>Courses & Student Count</h3>
+                    <!-- Course items will be loaded dynamically -->
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Change Password</h3>
+                <form id="changePasswordForm">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password</label>
+                        <input type="password" id="currentPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <input type="password" id="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <input type="password" id="confirmPassword" required>
+                    </div>
+                    <button type="submit">Update Password</button>
+                </form>
+                <div id="passwordMessage" class="message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            fetch('/api/logout', { method: 'POST' }).then(() => window.location.href = '/index.html');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load profile data
+            fetch('/api/professor/profile')
+                .then(response => response.json())
+                .then(data => {
+                    // Basic info
+                    document.getElementById('name').textContent = data.name || 'N/A';
+                    
+                    // Get username from /api/me
+                    fetch('/api/me')
+                        .then(r => r.json())
+                        .then(user => {
+                            document.getElementById('username').textContent = user.username || 'N/A';
+                        });
+                    
+                    document.getElementById('courses').textContent = data.courses || 'None assigned';
+                    document.getElementById('sections').textContent = data.sections || 'None assigned';
+                    
+                    // Format last login date
+                    if (data.last_login) {
+                        const date = new Date(data.last_login);
+                        document.getElementById('lastLogin').textContent = date.toLocaleString();
+                    } else {
+                        document.getElementById('lastLogin').textContent = 'First login';
+                    }
+                    
+                    // Load handled courses with student counts
+                    if (data.handled && data.handled.length > 0) {
+                        const handledContainer = document.getElementById('handledCourses');
+                        data.handled.forEach(item => {
+                            const courseItem = document.createElement('div');
+                            courseItem.className = 'course-item';
+                            courseItem.innerHTML = `
+                                <span class="course-name">${item.course} - ${item.section}</span>
+                                <span class="student-count">${item.count} students</span>
+                            `;
+                            handledContainer.appendChild(courseItem);
+                        });
+                    } else {
+                        document.getElementById('handledCourses').innerHTML += '<p style="text-align: center; color: #666;">No courses assigned yet.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading profile:', error);
+                    document.getElementById('profileInfo').innerHTML = '<p>Failed to load profile information. Please try again later.</p>';
+                });
+                
+            // Handle password change
+            const changePasswordForm = document.getElementById('changePasswordForm');
+            const passwordMessage = document.getElementById('passwordMessage');
+            
+            changePasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (newPassword !== confirmPassword) {
+                    showPasswordMessage('New passwords do not match!', 'error');
+                    return;
+                }
+                
+                // Send password change request
+                fetch('/api/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        currentPassword,
+                        newPassword
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showPasswordMessage('Password updated successfully!', 'success');
+                        changePasswordForm.reset();
+                    } else {
+                        showPasswordMessage(data.message || 'Failed to update password. Please try again.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showPasswordMessage('An error occurred. Please try again.', 'error');
+                });
+            });
+            
+            function showPasswordMessage(message, type) {
+                passwordMessage.textContent = message;
+                passwordMessage.className = 'message ' + type;
+                
+                // Clear message after 5 seconds
+                setTimeout(() => {
+                    passwordMessage.textContent = '';
+                    passwordMessage.className = 'message';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>

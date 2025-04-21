@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit Professor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #00BCD4;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .navbar-title {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .navbar-title i {
+            margin-right: 0.5rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: #F7FDFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            color: #006064;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #006064;
+            font-weight: 500;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #B2EBF2;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #E0F7FA;
+            color: #006064;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #00BCD4;
+        }
+
+        button {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 400;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            background: linear-gradient(90deg, #0097A7, #00ACC1);
+            transform: translateY(-2px);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            background: #E0F7FA;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: #B2EBF2;
+        }
+
+        .checkbox-item input {
+            margin-right: 8px;
+            width: auto;
+        }
+
+        .tab-container {
+            display: flex;
+            border-bottom: 2px solid #B2EBF2;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #006064;
+            font-weight: 500;
+            transition: background 0.2s;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab.active {
+            background: #00BCD4;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .subject-card {
+            background: #E0F7FA;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subject-info {
+            flex: 1;
+        }
+
+        .subject-code {
+            font-weight: 500;
+            color: #006064;
+        }
+
+        .subject-desc {
+            font-size: 0.9rem;
+            color: #00838F;
+        }
+
+        .year-section-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+
+        .year-section-filter select {
+            width: auto;
+            min-width: 150px;
+        }
+
+        .action-buttons {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-buttons button {
+            background: linear-gradient(90deg, #006064, #00838F);
+            transition: background 0.3s;
+        }
+
+        .action-buttons button:hover {
+            background: linear-gradient(90deg, #00838F, #0097A7);
+        }
+
+        #reinitializeSubjectsBtn {
+            margin-left: auto;
+            background: linear-gradient(90deg, #004D40, #00695C);
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+
+        #reinitializeSubjectsBtn:hover {
+            background: linear-gradient(90deg, #00695C, #00796B);
+        }
+
+        .subject-reminder {
+            background-color: #E1F5FE;
+            border-left: 4px solid #039BE5;
+            padding: 12px 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 0.95rem;
+            color: #01579B;
+        }
+
+        .subject-reminder i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+            color: #039BE5;
+        }
+
+        .subject-reminder a {
+            color: #0277BD;
+            font-weight: 500;
+            text-decoration: none;
+            margin: 0 4px;
+        }
+
+        .subject-reminder a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 0.75rem;
+            }
+            
+            .navbar-title {
+                margin-bottom: 0.5rem;
+            }
+            
+            .navbar a {
+                margin: 0.25rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .year-section-filter {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .year-section-filter select {
+                width: 100%;
+            }
+        }
+
+        .current-subjects-summary {
+            background-color: #E8F5E9;
+            border: 1px solid #C8E6C9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .current-subjects-summary h3 {
+            color: #2E7D32;
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .current-subjects-summary h3::before {
+            content: '\f14a';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            margin-right: 8px;
+            font-size: 1rem;
+        }
+
+        .current-subjects-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+            min-height: 36px;
+        }
+
+        .subject-chip {
+            background-color: #C8E6C9;
+            color: #2E7D32;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .subject-chip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        .subjects-help-text {
+            font-size: 0.85rem;
+            color: #555;
+            font-style: italic;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #C8E6C9;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-title"><i class="fas fa-chalkboard-teacher"></i> Professor Management</div>
+        <div>
+            <a href="dashboardAdmin.html"><i class="fas fa-home"></i> Home</a>
+            <a href="controlPanel.html"><i class="fas fa-sliders-h"></i> Control Panel</a>
+            <a href="addProfessor.html"><i class="fas fa-chalkboard-teacher"></i> Add Professor</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2 id="pageTitle">Add New Professor</h2>
+            
+            <div class="tab-container">
+                <div class="tab active" onclick="showTab('basicInfo')">Basic Information</div>
+                <div class="tab" onclick="showTab('subjects')">Subject Assignment</div>
+            </div>
+            
+            <div id="basicInfo" class="tab-content active">
+                <form id="professorForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password">
+                        <small id="passwordNote" style="color: #757575; display: none;">Leave blank to keep current password</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="courses">Courses (comma separated)</label>
+                        <input type="text" id="courses" name="courses" placeholder="e.g. BSCS, BSIT">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sections">Sections (comma separated)</label>
+                        <input type="text" id="sections" name="sections" placeholder="e.g. 1A, 2B, 3A">
+                    </div>
+                    
+                    <div class="subject-reminder">
+                        <i class="fas fa-info-circle"></i> Don't forget to assign subjects in the <a href="#" onclick="showTab('subjects'); return false;">Subject Assignment</a> tab before saving.
+                    </div>
+                    
+                    <button type="submit" id="saveBtn">Save Professor</button>
+                    <button type="button" onclick="window.location.href='controlPanel.html'">Cancel</button>
+                </form>
+            </div>
+            
+            <div id="subjects" class="tab-content">
+                <div class="year-section-filter">
+                    <div class="form-group">
+                        <label for="yearFilter">Filter by Year</label>
+                        <select id="yearFilter" onchange="filterSubjects()">
+                            <option value="">All Years</option>
+                            <option value="1">First Year</option>
+                            <option value="2">Second Year</option>
+                            <option value="3">Third Year</option>
+                            <option value="4">Fourth Year</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sectionFilter">Filter by Section</label>
+                        <select id="sectionFilter" onchange="filterSubjects()">
+                            <option value="">All Sections</option>
+                            <option value="A">Section A</option>
+                            <option value="B">Section B</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group action-buttons">
+                        <button type="button" id="reinitializeSubjectsBtn" onclick="reinitializeAllSubjects()">Reinitialize All Subjects</button>
+                    </div>
+                </div>
+                
+                <!-- Professor's current subjects summary - only shown in edit mode -->
+                <div id="currentSubjectsSummary" class="current-subjects-summary" style="display: none;">
+                    <h3>Current Subject Assignments</h3>
+                    <div id="currentSubjectsList" class="current-subjects-list"></div>
+                    <div class="subjects-help-text">Use the checkboxes below to add or remove subject assignments.</div>
+                </div>
+                
+                <div id="subjectsList" class="checkbox-group"></div>
+                
+                <button type="button" id="saveSubjectsBtn" onclick="saveSubjects()">Save Subject Assignments</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Subject data by year and section
+        const subjectsByYearSection = {
+            "1A": [
+                { code: "NSTP 122", description: "CIVIC WELFARE TRAINING SERVICES 2" },
+                { code: "CSM 121", description: "COLLEGE ALGEBRA" },
+                { code: "CC 103", description: "COMPUTER PROGRAMMING 2" },
+                { code: "PATHFIT 2", description: "EXERCISE-BASED FITNESS ACTIVITIES" },
+                { code: "LIT 001", description: "PHILIPPINE LITERATURE IN ENGLISH" },
+                { code: "CC 108", description: "TECHNICAL COMPUTER CONCEPTS" },
+                { code: "GEC 003", description: "THE CONTEMPORARY WORLD" },
+                { code: "CC 107", description: "WEB SYSTEM AND TECHNOLOGIES" }
+            ],
+            "1B": [
+                { code: "NSTP 122", description: "CIVIC WELFARE TRAINING SERVICES 2" },
+                { code: "CSM 121", description: "COLLEGE ALGEBRA" },
+                { code: "CC 103", description: "COMPUTER PROGRAMMING 2" },
+                { code: "PATHFIT 2", description: "EXERCISE-BASED FITNESS ACTIVITIES" },
+                { code: "LIT 001", description: "PHILIPPINE LITERATURE IN ENGLISH" },
+                { code: "CC 108", description: "TECHNICAL COMPUTER CONCEPTS" },
+                { code: "GEC 003", description: "THE CONTEMPORARY WORLD" },
+                { code: "CC 107", description: "WEB SYSTEM AND TECHNOLOGIES" }
+            ],
+            "2A": [
+                { code: "CCS 110", description: "DIGITAL GRAPHICS" },
+                { code: "CS 104", description: "DISCRETE STRUCTURES 2" },
+                { code: "CS 107", description: "EMBEDDED PROGRAMMING" },
+                { code: "CS 115", description: "HUMAN COMPUTER INTERACTION" },
+                { code: "CSM 223", description: "INTEGRAL CALCULUS" },
+                { code: "CS 105", description: "PROGRAMMING LANGUAGES" },
+                { code: "PATHFIT 4", description: "SPORTS AND FITNESS" }
+            ],
+            "2B": [
+                { code: "CCS 110", description: "DIGITAL GRAPHICS" },
+                { code: "CS 104", description: "DISCRETE STRUCTURES 2" },
+                { code: "CS 107", description: "EMBEDDED PROGRAMMING" },
+                { code: "CS 115", description: "HUMAN COMPUTER INTERACTION" },
+                { code: "CSM 223", description: "INTEGRAL CALCULUS" },
+                { code: "CS 105", description: "PROGRAMMING LANGUAGES" },
+                { code: "PATHFIT 4", description: "SPORTS AND FITNESS" }
+            ],
+            "3A": [
+                { code: "CCS 106", description: "APPLICATIONS DEVELOPMENT AND EMERGING TECHNOLOGIES" },
+                { code: "CS 111", description: "ARCHITECTURE AND ORGANIZATION" },
+                { code: "GEC 006", description: "ART APPRECIATION" },
+                { code: "CSE 102", description: "GRAPHICS AND VISUAL COMPUTING" },
+                { code: "GEM 001", description: "LIFE AND WORKS OF RIZAL" },
+                { code: "RES 001", description: "METHODS OF RESEARCH" },
+                { code: "CCS 126", description: "SOFTWARE ENGINEERING 2" }
+            ],
+            "3B": [
+                { code: "CCS 106", description: "APPLICATIONS DEVELOPMENT AND EMERGING TECHNOLOGIES" },
+                { code: "CS 111", description: "ARCHITECTURE AND ORGANIZATION" },
+                { code: "GEC 006", description: "ART APPRECIATION" },
+                { code: "CSE 102", description: "GRAPHICS AND VISUAL COMPUTING" },
+                { code: "GEM 001", description: "LIFE AND WORKS OF RIZAL" },
+                { code: "RES 001", description: "METHODS OF RESEARCH" },
+                { code: "CCS 126", description: "SOFTWARE ENGINEERING 2" }
+            ],
+            "4A": [
+                { code: "CS 113", description: "AUTOMATA AND LANGUAGE THEORY" },
+                { code: "CS 119", description: "CS THESIS WRITING 2" },
+                { code: "CCS 115", description: "CURRENT TRENDS IN IT AND SEMINARS" },
+                { code: "CS 115", description: "HUMAN COMPUTER INTERACTION" },
+                { code: "CSE 105", description: "PARALLEL AND DISTRIBUTED COMPUTING" },
+                { code: "CCS 416", description: "PRACTICUM 2" }
+            ],
+            "4B": [
+                { code: "CS 113", description: "AUTOMATA AND LANGUAGE THEORY" },
+                { code: "CS 119", description: "CS THESIS WRITING 2" },
+                { code: "CCS 115", description: "CURRENT TRENDS IN IT AND SEMINARS" },
+                { code: "CS 115", description: "HUMAN COMPUTER INTERACTION" },
+                { code: "CSE 105", description: "PARALLEL AND DISTRIBUTED COMPUTING" },
+                { code: "CCS 416", description: "PRACTICUM 2" }
+            ]
+        };
+        
+        // Global variables
+        let isEditMode = false;
+        let currentUsername = '';
+        let assignedSubjects = [];
+        let allSubjectsData = [];
+        
+        // Initialize page on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setupPage();
+            fetchAllSubjects();
+            
+            // Set up form submission
+            document.getElementById('professorForm').addEventListener('submit', event => {
+                event.preventDefault();
+                saveProfessor();
+            });
+        });
+        
+        function setupPage() {
+            // Check if we're in edit mode (URL has username parameter)
+            const urlParams = new URLSearchParams(window.location.search);
+            currentUsername = urlParams.get('username');
+            
+            if (currentUsername) {
+                isEditMode = true;
+                document.getElementById('pageTitle').textContent = 'Edit Professor';
+                document.getElementById('saveBtn').textContent = 'Update Professor';
+                document.getElementById('passwordNote').style.display = 'block';
+                
+                // Disable username field in edit mode
+                document.getElementById('username').readOnly = true;
+                
+                // Load professor data
+                loadProfessorData(currentUsername);
+            }
+        }
+        
+        async function loadProfessorData(username) {
+            try {
+                const response = await fetch(`/api/admin/professors/${username}`);
+                if (!response.ok) {
+                    throw new Error('Failed to load professor data');
+                }
+                
+                const professor = await response.json();
+                
+                // Populate form
+                document.getElementById('username').value = professor.username;
+                document.getElementById('name').value = professor.name || '';
+                document.getElementById('courses').value = professor.courses || '';
+                document.getElementById('sections').value = professor.sections || '';
+                
+                // Load assigned subjects
+                await loadAssignedSubjects(username);
+                
+                // Make sure to update the checkboxes after both subjects and assignments are loaded
+                if (allSubjectsData.length > 0) {
+                    updateSubjectCheckboxes();
+                }
+            } catch (error) {
+                console.error('Error loading professor data:', error);
+                alert('Failed to load professor data. Please try again.');
+            }
+        }
+        
+        async function loadAssignedSubjects(username) {
+            try {
+                const response = await fetch(`/api/admin/professors/${username}/subjects`);
+                if (!response.ok) {
+                    throw new Error('Failed to load subject assignments');
+                }
+                
+                const subjectsData = await response.json();
+                console.log('Loaded assigned subjects:', subjectsData);
+                
+                // Extract subject codes
+                assignedSubjects = subjectsData.map(subject => subject.code);
+                
+                // Show the current subjects summary since we're in edit mode
+                displayCurrentSubjectsSummary(subjectsData);
+                
+                updateSubjectCheckboxes();
+                return subjectsData;
+            } catch (error) {
+                console.error('Error loading subject assignments:', error);
+                // Continue with empty assignments
+                assignedSubjects = [];
+                // Display empty summary
+                displayCurrentSubjectsSummary([]);
+                updateSubjectCheckboxes();
+                return [];
+            }
+        }
+        
+        function displayCurrentSubjectsSummary(subjects) {
+            // Show the summary container
+            const summaryContainer = document.getElementById('currentSubjectsSummary');
+            summaryContainer.style.display = 'block';
+            
+            // Get the list container
+            const subjectsList = document.getElementById('currentSubjectsList');
+            subjectsList.innerHTML = '';
+            
+            // Sort subjects by code for consistent display
+            subjects.sort((a, b) => a.code.localeCompare(b.code));
+            
+            // Add each subject as a chip
+            subjects.forEach(subject => {
+                const chip = document.createElement('div');
+                chip.className = 'subject-chip';
+                chip.textContent = subject.code;
+                
+                // Add tooltip with description if available
+                if (subject.description) {
+                    chip.title = subject.description;
+                }
+                
+                subjectsList.appendChild(chip);
+            });
+            
+            // If no subjects, show a message
+            if (subjects.length === 0) {
+                const noSubjects = document.createElement('div');
+                noSubjects.textContent = 'No subjects assigned yet';
+                noSubjects.className = 'subject-chip';
+                subjectsList.appendChild(noSubjects);
+            }
+        }
+        
+        async function fetchAllSubjects() {
+            try {
+                console.log('Fetching subjects from API...');
+                const response = await fetch('/api/subjects');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch subjects: ${response.status} ${response.statusText}`);
+                }
+                
+                allSubjectsData = await response.json();
+                console.log('Received subjects from API:', allSubjectsData);
+                
+                // If no subjects are returned from the API, initialize with the reference data
+                if (!allSubjectsData || allSubjectsData.length === 0) {
+                    console.log('No subjects returned from API, using reference data');
+                    initializeWithReferenceData();
+                } else {
+                    loadAllSubjects();
+                    
+                    // If in edit mode, ensure checkboxes are properly selected
+                    if (isEditMode && assignedSubjects.length > 0) {
+                        updateSubjectCheckboxes();
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching subjects:', error);
+                // Fall back to local data if unable to fetch
+                console.log('Falling back to reference data');
+                initializeWithReferenceData();
+            }
+        }
+        
+        function initializeWithReferenceData() {
+            // Use the reference data to populate subjects
+            allSubjectsData = [];
+            const allSubjects = new Set();
+            
+            // Flatten and deduplicate subjects from all year-sections
+            Object.values(subjectsByYearSection).forEach(yearSubjects => {
+                yearSubjects.forEach(subject => {
+                    allSubjects.add(JSON.stringify(subject));
+                });
+            });
+            
+            // Convert back to objects and add to allSubjectsData
+            Array.from(allSubjects).forEach(subjectJson => {
+                allSubjectsData.push(JSON.parse(subjectJson));
+            });
+            
+            console.log('Initialized with reference data:', allSubjectsData);
+            loadAllSubjects();
+        }
+        
+        function loadAllSubjects() {
+            console.log('Loading subjects UI with data:', allSubjectsData);
+            const subjectsList = document.getElementById('subjectsList');
+            
+            // Clear current list
+            subjectsList.innerHTML = '';
+            
+            // Get selected filters
+            const yearFilter = document.getElementById('yearFilter').value;
+            const sectionFilter = document.getElementById('sectionFilter').value;
+            
+            let filteredSubjects = [...allSubjectsData];
+            
+            // Apply filters if needed and if not the initial load
+            if ((yearFilter || sectionFilter) && document.getElementById('subjectsList').getAttribute('data-initialized')) {
+                // Determine which year-sections to include
+                let yearSections = Object.keys(subjectsByYearSection);
+                
+                if (yearFilter) {
+                    yearSections = yearSections.filter(ys => ys.startsWith(yearFilter));
+                }
+                
+                if (sectionFilter) {
+                    yearSections = yearSections.filter(ys => ys.endsWith(sectionFilter));
+                }
+                
+                // Get all matching subjects from our reference data
+                const matchingSubjects = new Set();
+                yearSections.forEach(yearSection => {
+                    const subjects = subjectsByYearSection[yearSection];
+                    subjects.forEach(subject => {
+                        matchingSubjects.add(subject.code);
+                    });
+                });
+                
+                // Filter allSubjectsData by the matching codes
+                filteredSubjects = allSubjectsData.filter(subject => 
+                    matchingSubjects.has(subject.code)
+                );
+                console.log('Filtered subjects:', filteredSubjects);
+            } else {
+                // Mark the list as initialized so future filter operations work correctly
+                document.getElementById('subjectsList').setAttribute('data-initialized', 'true');
+            }
+            
+            // Sort subjects by code
+            filteredSubjects.sort((a, b) => a.code.localeCompare(b.code));
+            
+            // Create checkboxes for each subject
+            filteredSubjects.forEach(subject => {
+                const isChecked = assignedSubjects.includes(subject.code);
+                
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'subject-card';
+                
+                const subjectInfo = document.createElement('div');
+                subjectInfo.className = 'subject-info';
+                
+                const codeDiv = document.createElement('div');
+                codeDiv.className = 'subject-code';
+                codeDiv.textContent = subject.code;
+                
+                const descDiv = document.createElement('div');
+                descDiv.className = 'subject-desc';
+                descDiv.textContent = subject.description || subject.name;
+                
+                subjectInfo.appendChild(codeDiv);
+                subjectInfo.appendChild(descDiv);
+                
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'checkbox-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = 'subject-' + subject.code.replace(/\s+/g, '-');
+                checkbox.value = subject.code;
+                checkbox.checked = isChecked;
+                
+                const label = document.createElement('label');
+                label.htmlFor = checkbox.id;
+                label.textContent = 'Assign';
+                
+                checkboxDiv.appendChild(checkbox);
+                checkboxDiv.appendChild(label);
+                
+                subjectCard.appendChild(subjectInfo);
+                subjectCard.appendChild(checkboxDiv);
+                
+                subjectsList.appendChild(subjectCard);
+            });
+            
+            // Add message if no subjects match filters
+            if (filteredSubjects.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'no-results';
+                noResults.textContent = 'No subjects match the selected filters. Please clear filters or add subjects first.';
+                subjectsList.appendChild(noResults);
+            }
+        }
+        
+        function updateSubjectCheckboxes() {
+            // Update checkbox states based on assignedSubjects array
+            document.querySelectorAll('#subjectsList input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = assignedSubjects.includes(checkbox.value);
+            });
+        }
+        
+        function filterSubjects() {
+            loadAllSubjects();
+        }
+        
+        function saveSubjects() {
+            // Collect all checked subjects
+            const checkboxes = document.querySelectorAll('#subjectsList input[type="checkbox"]:checked');
+            assignedSubjects = Array.from(checkboxes).map(cb => cb.value);
+            
+            // Update the subject summary if in edit mode
+            if (isEditMode) {
+                // Create mock subject objects from the codes
+                const selectedSubjects = assignedSubjects.map(code => {
+                    // Try to find the description from allSubjectsData
+                    const existingSubject = allSubjectsData.find(s => s.code === code);
+                    return {
+                        code: code,
+                        description: existingSubject ? (existingSubject.description || existingSubject.name) : code
+                    };
+                });
+                displayCurrentSubjectsSummary(selectedSubjects);
+            }
+            
+            // Switch back to basic info tab
+            showTab('basicInfo');
+            alert(`Selected ${assignedSubjects.length} subjects. Please click 'Save Professor' to apply changes.`);
+        }
+        
+        async function reinitializeAllSubjects() {
+            if (!confirm('This will recreate all subjects from the reference data. Any custom subjects will be lost. Are you sure?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/reinitialize-subjects', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to reinitialize subjects');
+                }
+                
+                const result = await response.json();
+                alert('Subjects reinitialized successfully. Refreshing subject list...');
+                await fetchAllSubjects(); // Reload the subjects
+            } catch (error) {
+                console.error('Error reinitializing subjects:', error);
+                alert('Failed to reinitialize subjects. Please check console for details.');
+            }
+        }
+        
+        async function saveProfessor() {
+            // Get form data
+            const professorData = {
+                username: document.getElementById('username').value,
+                name: document.getElementById('name').value,
+                courses: document.getElementById('courses').value,
+                sections: document.getElementById('sections').value,
+                subjects: assignedSubjects // Include the assigned subjects
+            };
+            
+            // Add password only if provided (for edit mode)
+            const password = document.getElementById('password').value;
+            if (password) {
+                professorData.password = password;
+            }
+            
+            try {
+                const response = await fetch('/api/admin/professors', {
+                    method: isEditMode ? 'PUT' : 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(professorData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Failed to save professor');
+                }
+                
+                alert(`Professor ${isEditMode ? 'updated' : 'added'} successfully!`);
+                window.location.href = 'controlPanel.html';
+            } catch (error) {
+                console.error('Error saving professor:', error);
+                alert('Failed to save professor: ' + error.message);
+            }
+        }
+        
+        function showTab(tabId) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Activate selected tab
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            
+            // If switching to the subjects tab, ensure checkboxes are updated
+            if (tabId === 'subjects' && isEditMode) {
+                updateSubjectCheckboxes();
+            }
+        }
+        
+        function logout() {
+            fetch('/api/logout', { method: 'POST' })
+                .then(() => {
+                    window.location.href = '/index.html';
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                    alert('Failed to log out. Please try again.');
+                });
+        }
+    </script>
+</body>
+</html>

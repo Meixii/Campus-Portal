@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="/logo11.png" type="image/png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #E0F7FA 0%, #B2EBF2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: #00BCD4;
+            color: #fff;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .navbar-title {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .navbar-title i {
+            margin-right: 0.5rem;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .card {
+            background: #F7FDFF;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 96, 100, 0.15);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            color: #006064;
+            margin-bottom: 15px;
+            font-weight: 500;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        p {
+            color: #607D8B;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #E0F7FA;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 96, 100, 0.2);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: #00BCD4;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #006064;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card a {
+            background: linear-gradient(90deg, #00BCD4, #26C6DA);
+            color: #FFFFFF;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-top: auto;
+            transition: background 0.3s ease;
+        }
+
+        .feature-card a:hover {
+            background: linear-gradient(90deg, #0097A7, #00ACC1);
+        }
+
+        .welcome-message {
+            font-size: 1.2rem;
+            color: #006064;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 0.75rem;
+            }
+            
+            .navbar-title {
+                margin-bottom: 0.5rem;
+            }
+            
+            .navbar a {
+                margin: 0.25rem 0.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="navbar-title"><i class="fas fa-user-shield"></i> Admin Dashboard</div>
+        <div>
+            <a href="dashboardAdmin.html"><i class="fas fa-home"></i> Home</a>
+            <a href="controlPanel.html"><i class="fas fa-sliders-h"></i> Control Panel</a>
+            <a href="addProfessor.html"><i class="fas fa-chalkboard-teacher"></i> Add Professor</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>Admin Dashboard</h2>
+            <div id="welcomeMessage" class="welcome-message">Welcome, Administrator!</div>
+            <p>From this dashboard, you can manage the entire campus portal system. Use the features below to access different administrative functions:</p>
+            
+            <div class="dashboard-cards">
+                <div class="feature-card">
+                    <i class="fas fa-users-cog"></i>
+                    <h3>User Management</h3>
+                    <p>Authorize/deauthorize users, view all system users, and manage their access levels</p>
+                    <a href="controlPanel.html">Manage Users</a>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <h3>Professor Management</h3>
+                    <p>Add, edit, or remove professors and assign them to courses and subjects</p>
+                    <a href="addProfessor.html">Manage Professors</a>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Subject Administration</h3>
+                    <p>View and manage all subjects in the system, including year and section assignments</p>
+                    <a href="addProfessor.html?tab=subjects">Manage Subjects</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            fetch('/api/logout', { method: 'POST' })
+                .then(() => {
+                    window.location.href = '/index.html';
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                });
+        }
+        
+        // Load user data
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/me')
+                .then(response => response.json())
+                .then(user => {
+                    if (user && user.name) {
+                        document.getElementById('welcomeMessage').textContent = `Welcome, ${user.name}!`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching user data:', error);
+                });
+        });
+    </script>
+</body>
+</html>
