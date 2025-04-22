@@ -382,12 +382,12 @@
                 this.subjects.forEach(subject => {
                     const option1 = document.createElement('option');
                     option1.value = subject.id;
-                    option1.textContent = `${subject.code} - ${subject.name}`;
+                    option1.textContent = `${subject.code} - ${subject.description || subject.name}`;
                     subjectSelect.appendChild(option1);
                     
                     const option2 = document.createElement('option');
                     option2.value = subject.id;
-                    option2.textContent = `${subject.code} - ${subject.name}`;
+                    option2.textContent = `${subject.code} - ${subject.description || subject.name}`;
                     filterSelect.appendChild(option2);
                 });
             }
@@ -453,7 +453,7 @@
                                 enrollmentRows.push({
                                     student_id: student.student_id,
                                     name: student.name,
-                                    subject: `${subject.code} - ${subject.name}`
+                                    subject: `${subject.code} - ${subject.description || subject.name}`
                                 });
                                 hasEnrollments = true;
                             }

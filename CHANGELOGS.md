@@ -1,5 +1,12 @@
 ## Recent Updates
 
+## Update #41
+- Changed subject dropdowns to use "Code - Description" format instead of "Code - Name"
+- Updated both subject filter dropdown and enrolled students table to use descriptions
+- Added fallback to subject.name if description is not available
+- Improved consistency across all subject displays in the professor interface
+- Enhanced readability of subject information in the student enrollment listings
+
 ## Update #40
 - Fixed student ID showing as "undefined" in enrollment success message
 - Fixed recently enrolled students not appearing in the student list
