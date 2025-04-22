@@ -1,5 +1,66 @@
 ## Recent Updates
 
+## Update #40
+- Fixed student ID showing as "undefined" in enrollment success message
+- Fixed recently enrolled students not appearing in the student list
+- Added improved logging for student loading and rendering
+- Enhanced error handling in the student listing function
+- Added null checks to prevent errors with missing data
+- Fixed student sorting to properly handle numerical student IDs
+- Added fallback display of "N/A" for missing student information fields
+
+## Update #39
+- Fixed 400 Bad Request error in student enrollment API
+- Updated enrollment endpoint to handle different parameter names
+- Added detailed error logging for enrollment process
+- Improved validation and error handling on both client and server
+- Added support for auto-generating student ID when not provided
+- Updated form submission logic to properly handle readonly fields
+- Fixed handling of year_section vs section parameter inconsistency
+
+## Update #38
+- Updated enrollment form to auto-generate student ID, username, and password
+- Made username and password fields read-only and linked to student ID
+- Added "Generate ID" button to manually request student ID before form submission
+- Changed password field from password type to text type for better visibility
+- Added validation to ensure all required fields are populated before submission
+- Added automatic ID generation if form is submitted without a student ID
+- Added success messages when student ID is generated
+
+## Update #37
+- Added student ID information to batch enrollment page
+- Enhanced CSV template with notes about latest student ID
+- Added dynamic student ID generation in CSV template
+- Improved user interface with informative message box about student IDs
+- Added automatic fetching of latest student ID on page load
+- Set sequential student IDs in the template to avoid duplicates
+- Added comments in CSV template that are ignored during import
+
+## Update #36
+- Fixed batch enrollment functionality for professors
+- Added missing batch enrollment API endpoint (/api/professor/batch-enroll)
+- Improved CSV file parsing to handle different file formats (Windows, Mac, Unix)
+- Added robust error handling for CSV uploads with detailed logging
+- Updated CSV template to match exactly with the expected format
+- Fixed column identification in CSV files regardless of column order
+- Enhanced validation for student data during batch enrollment
+
+## Update #35
+- Updated professor enrollment page to remove email field that wasn't in database schema
+- Added CSV template download button for batch enrollment
+- Updated CSV format instruction to match actual database fields
+- Added example data in CSV template for easier understanding
+- Improved batch enrollment error handling for better user feedback
+
+## Update #34
+- Updated default account initialization to match documentation in README.md
+- Set correct usernames and passwords for default accounts:
+  - Admin: admin/admin123
+  - Professor: prof1/password
+  - Student: 20250001/20250001
+- Added console logging for successful account creation on first run
+- Fixed inconsistency between documented default accounts and actual initialization
+
 ## Update #33
 - Fixed database initialization order in server.js
 - Resolved error with subjects table not being initialized properly

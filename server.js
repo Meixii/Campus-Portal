@@ -100,22 +100,25 @@ initDb();
 
 // Initialize test accounts if not present
 function initTestAccounts() {
-    db.get('SELECT * FROM users WHERE username = ?', ['zengarden'], (err, user) => {
+    db.get('SELECT * FROM users WHERE username = ?', ['admin'], (err, user) => {
         if (!user) {
             db.run('INSERT INTO users (username, password_hash, role, status, name, active) VALUES (?, ?, ?, ?, ?, ?)',
-                ['zengarden', bcrypt.hashSync('Admin@123', 10), 'admin', 'authorized', 'zengarden', 1]);
+                ['admin', bcrypt.hashSync('admin123', 10), 'admin', 'authorized', 'System Administrator', 1]);
+            console.log('Created default admin account: admin/admin123');
         }
     });
-    db.get('SELECT * FROM users WHERE username = ?', ['eman'], (err, user) => {
+    db.get('SELECT * FROM users WHERE username = ?', ['prof1'], (err, user) => {
         if (!user) {
             db.run('INSERT INTO users (username, password_hash, role, status, name, courses, sections, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-                ['eman', bcrypt.hashSync('mikazuki', 10), 'professor', 'authorized', 'eman', 'BSCS,BSIT', '3A,2A', 1]);
+                ['prof1', bcrypt.hashSync('password', 10), 'professor', 'authorized', 'Professor One', 'BSCS,BSIT', '3A,2A', 1]);
+            console.log('Created default professor account: prof1/password');
         }
     });
-    db.get('SELECT * FROM users WHERE username = ?', ['gian'], (err, user) => {
+    db.get('SELECT * FROM users WHERE username = ?', ['20250001'], (err, user) => {
         if (!user) {
             db.run('INSERT INTO users (username, password_hash, role, status, name, student_id, course, year_section, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                ['gian', bcrypt.hashSync('mikazuki', 10), 'student', 'authorized', 'gian', '20230001', 'BSCS', '3A', 1]);
+                ['20250001', bcrypt.hashSync('20250001', 10), 'student', 'authorized', 'Student One', '20250001', 'BSCS', '3A', 1]);
+            console.log('Created default student account: 20250001/20250001');
         }
     });
 }
@@ -655,58 +658,126 @@ app.get('/api/professor/students', (req, res) => {
 app.post('/api/professor/enroll', (req, res) => {
     if (!req.session.user || req.session.user.role !== 'professor') return res.status(403).json({ error: 'Forbidden' });
     
-    const { student_id, name, course, section } = req.body;
-    if (!student_id || !name || !course || !section) {
-        return res.status(400).json({ error: 'Missing required fields' });
+    console.log('Enrollment request body:', req.body);
+    
+    const { name, username, password, course, year_section } = req.body;
+    // Accept either year_section or section parameter
+    const section = year_section || req.body.section;
+    
+    // Validate required fields
+    if (!name) {
+        return res.status(400).json({ error: 'Student name is required' });
     }
+    
+    if (!course) {
+        return res.status(400).json({ error: 'Course is required' });
+    }
+    
+    if (!section) {
+        return res.status(400).json({ error: 'Year & Section is required' });
+    }
+    
+    // Either we need both username and password, or we'll generate student_id
+    let student_id = req.body.student_id || username;
     
     // Check if professor handles this course/section
     db.get('SELECT courses, sections FROM users WHERE username = ? AND role = "professor"', [req.session.user.username], (err, professor) => {
-        if (err) return res.status(500).json({ error: 'DB error' });
-        if (!professor) return res.status(404).json({ error: 'Professor not found' });
+        if (err) {
+            console.error('DB error:', err);
+            return res.status(500).json({ error: 'DB error' });
+        }
+        
+        if (!professor) {
+            return res.status(404).json({ error: 'Professor not found' });
+        }
+        
+        console.log(`Professor courses: ${professor.courses}, sections: ${professor.sections}`);
+        console.log(`Requested course: ${course}, section: ${section}`);
         
         const courses = professor.courses ? professor.courses.split(',').map(c => c.trim()) : [];
         const sections = professor.sections ? professor.sections.split(',').map(s => s.trim()) : [];
         
         if (!courses.includes(course) || !sections.includes(section)) {
-            return res.status(403).json({ error: 'You are not authorized to enroll students in this course/section' });
+            return res.status(403).json({ 
+                error: 'You are not authorized to enroll students in this course/section',
+                details: {
+                    authorizedCourses: courses,
+                    authorizedSections: sections,
+                    requestedCourse: course,
+                    requestedSection: section
+                }
+            });
         }
         
-        // Use student_id directly as the username and password
-        const username = student_id;
-        const password = student_id; // Set password to match student_id
-        const hashedPassword = bcrypt.hashSync(password, 10);
-        
-        // Check if student_id already exists
-        db.get('SELECT * FROM users WHERE student_id = ?', [student_id], (err, existingStudent) => {
-            if (err) return res.status(500).json({ error: 'DB error' });
-            if (existingStudent) return res.status(400).json({ error: 'Student ID already exists' });
+        const enrollStudent = (studentId) => {
+            // Use student_id as username and password if not provided
+            const finalUsername = username || studentId;
+            const finalPassword = password || studentId;
+            const hashedPassword = bcrypt.hashSync(finalPassword, 10);
             
-            // Also check if the username is already taken
-            db.get('SELECT * FROM users WHERE username = ?', [username], (err, existingUser) => {
-                if (err) return res.status(500).json({ error: 'DB error' });
-                if (existingUser) return res.status(400).json({ error: 'Username already exists' });
+            console.log(`Enrolling student: ID=${studentId}, Username=${finalUsername}, Name=${name}, Course=${course}, Section=${section}`);
+            
+            // Check if student_id already exists
+            db.get('SELECT * FROM users WHERE student_id = ?', [studentId], (err, existingStudent) => {
+                if (err) {
+                    console.error('Error checking existing student ID:', err);
+                    return res.status(500).json({ error: 'DB error' });
+                }
                 
-                // Insert the new student - always authorized
-                db.run('INSERT INTO users (username, password_hash, role, status, name, student_id, course, year_section, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                    [username, hashedPassword, 'student', 'authorized', name, student_id, course, section, 1],
-                    function(err) {
-                        if (err) return res.status(500).json({ error: 'DB error: ' + err.message });
-                        res.status(201).json({
-                            success: true,
-                            message: 'Student enrolled successfully and authorized',
-                            student: {
-                                username,
-                                name,
-                                student_id,
-                                course,
-                                year_section: section
-                            }
-                        });
+                if (existingStudent) {
+                    return res.status(400).json({ error: 'Student ID already exists' });
+                }
+                
+                // Also check if the username is already taken
+                db.get('SELECT * FROM users WHERE username = ?', [finalUsername], (err, existingUser) => {
+                    if (err) {
+                        console.error('Error checking existing username:', err);
+                        return res.status(500).json({ error: 'DB error' });
                     }
-                );
+                    
+                    if (existingUser) {
+                        return res.status(400).json({ error: 'Username already exists' });
+                    }
+                    
+                    // Insert the new student - always authorized
+                    db.run('INSERT INTO users (username, password_hash, role, status, name, student_id, course, year_section, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                        [finalUsername, hashedPassword, 'student', 'authorized', name, studentId, course, section, 1],
+                        function(err) {
+                            if (err) {
+                                console.error('Error inserting student:', err);
+                                return res.status(500).json({ error: 'DB error: ' + err.message });
+                            }
+                            
+                            res.status(201).json({
+                                success: true,
+                                message: 'Student enrolled successfully and authorized',
+                                student: {
+                                    username: finalUsername,
+                                    name,
+                                    student_id: studentId,
+                                    course,
+                                    year_section: section
+                                }
+                            });
+                        }
+                    );
+                });
             });
-        });
+        };
+        
+        // If we don't have a student_id, generate one
+        if (!student_id) {
+            generateStudentId()
+                .then(newStudentId => {
+                    enrollStudent(newStudentId);
+                })
+                .catch(err => {
+                    console.error('Error generating student ID:', err);
+                    return res.status(500).json({ error: 'Failed to generate student ID' });
+                });
+        } else {
+            enrollStudent(student_id);
+        }
     });
 });
 
@@ -1676,6 +1747,88 @@ app.get('/api/student/professor-attendance', (req, res) => {
             }
             
             res.json(records || []);
+        });
+    });
+});
+
+// Professor: Batch enroll students
+app.post('/api/professor/batch-enroll', (req, res) => {
+    if (!req.session.user || req.session.user.role !== 'professor') return res.status(403).json({ error: 'Forbidden' });
+    
+    const { students } = req.body;
+    
+    if (!students || !Array.isArray(students) || students.length === 0) {
+        return res.status(400).json({ error: 'No students provided for enrollment' });
+    }
+    
+    // Check if professor handles the courses/sections for these students
+    db.get('SELECT courses, sections FROM users WHERE username = ? AND role = "professor"', [req.session.user.username], (err, professor) => {
+        if (err) return res.status(500).json({ error: 'DB error' });
+        if (!professor) return res.status(404).json({ error: 'Professor not found' });
+        
+        const courses = professor.courses ? professor.courses.split(',').map(c => c.trim()) : [];
+        const sections = professor.sections ? professor.sections.split(',').map(s => s.trim()) : [];
+        
+        // Validate all students can be enrolled by this professor
+        const validStudents = students.filter(student => {
+            return courses.includes(student.course) && sections.includes(student.year_section);
+        });
+        
+        if (validStudents.length === 0) {
+            return res.status(400).json({ error: 'None of the students are in your assigned courses/sections' });
+        }
+        
+        console.log(`Processing batch enrollment of ${validStudents.length} students`);
+        
+        let enrolled = 0;
+        let errors = [];
+        
+        // Generate student IDs for all students at once
+        const batchEnroll = async () => {
+            for (const student of validStudents) {
+                try {
+                    // Use the username as student_id if it looks like a student ID, otherwise generate a new one
+                    let student_id = student.username;
+                    if (!/^\d{8}$/.test(student.username)) {
+                        student_id = await generateStudentId();
+                    }
+                    
+                    // Hash the password
+                    const hashedPassword = bcrypt.hashSync(student.password, 10);
+                    
+                    // Insert the student with authorization
+                    await new Promise((resolve, reject) => {
+                        db.run('INSERT INTO users (username, password_hash, role, status, name, student_id, course, year_section, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                            [student.username, hashedPassword, 'student', 'authorized', student.name, student_id, student.course, student.year_section, 1],
+                            function(err) {
+                                if (err) {
+                                    console.error(`Error enrolling student ${student.name}:`, err);
+                                    errors.push({ name: student.name, error: err.message });
+                                    resolve(); // Continue to next student even if this one fails
+                                } else {
+                                    enrolled++;
+                                    resolve();
+                                }
+                            }
+                        );
+                    });
+                } catch (error) {
+                    console.error(`Error processing student ${student.name}:`, error);
+                    errors.push({ name: student.name, error: error.message });
+                }
+            }
+            
+            res.status(200).json({
+                success: true,
+                message: `Batch enrollment completed. Successfully enrolled ${enrolled} students.`,
+                enrolled,
+                errors: errors.length > 0 ? errors : null
+            });
+        };
+        
+        batchEnroll().catch(error => {
+            console.error('Batch enrollment failed:', error);
+            res.status(500).json({ error: 'Batch enrollment failed', message: error.message });
         });
     });
 });

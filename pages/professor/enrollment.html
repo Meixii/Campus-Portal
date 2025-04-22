@@ -301,24 +301,21 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" name="email" required>
+                    <label for="username">Username <small>(Same as Student ID)</small></label>
+                    <input type="text" id="username" name="username" readonly placeholder="Auto-generated from Student ID">
                 </div>
 
                 <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <label for="password">Password <small>(Same as Student ID)</small></label>
+                    <input type="text" id="password" name="password" readonly placeholder="Auto-generated from Student ID">
                 </div>
 
                 <div class="form-group">
                     <label for="student_id">Student ID</label>
-                    <input type="text" id="student_id" name="student_id" disabled>
-                    <small class="field-hint">Auto-generated upon enrollment</small>
+                    <input type="text" id="student_id" name="student_id" readonly placeholder="Auto-generated upon enrollment">
+                    <button type="button" id="generateStudentId" style="width: auto; margin-top: 8px; padding: 6px 12px; font-size: 0.85rem;">
+                        <i class="fas fa-sync-alt"></i> Generate ID
+                    </button>
                 </div>
 
                 <div class="form-group">
@@ -366,10 +363,21 @@
                     </div>
                 </div>
                 <button type="submit">Upload and Enroll</button>
+                <button type="button" id="downloadTemplate" style="background: linear-gradient(90deg, #4a4287, #6c5ce7);">
+                    <i class="fas fa-download"></i> Download CSV Template
+                </button>
             </form>
             <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
-                CSV format: name,email,username,password,course,year_section
+                CSV format: name,username,password,course,year_section
             </p>
+            <div id="studentIdInfo" style="margin-top: 10px; background-color: #f0ebff; padding: 12px; border-radius: 8px; border-left: 4px solid #6c5ce7;">
+                <p style="margin: 0; font-size: 0.9rem; color: #4a4287;">
+                    <strong>Note on Student IDs:</strong> <span id="currentStudentIdMessage">Loading latest student ID...</span>
+                </p>
+                <p style="margin: 5px 0 0 0; font-size: 0.85rem; color: #666;">
+                    The CSV template will include this information. For manual enrollment, you can use these IDs as usernames and passwords.
+                </p>
+            </div>
         </div>
         
         <div class="student-list">
@@ -400,6 +408,7 @@
                 this.students = [];
                 this.setupEventListeners();
                 this.loadStudents();
+                this.getLatestStudentId(); // Fetch latest student ID on page load
             }
 
             setupEventListeners() {
@@ -420,14 +429,30 @@
                     const fileName = e.target.files.length > 0 ? e.target.files[0].name : 'No file chosen';
                     document.getElementById('fileName').textContent = fileName;
                 });
+                
+                // CSV Template download
+                document.getElementById('downloadTemplate').addEventListener('click', () => {
+                    this.downloadCSVTemplate();
+                });
+                
+                // Generate Student ID button
+                document.getElementById('generateStudentId').addEventListener('click', () => {
+                    this.generateAndDisplayStudentId();
+                });
             }
 
             async loadStudents() {
                 try {
+                    console.log('Loading enrolled students...');
                     const response = await fetch('/api/professor/students');
-                    if (!response.ok) throw new Error('Failed to fetch students');
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch students: ${response.status} ${response.statusText}`);
+                    }
                     
-                    this.students = await response.json();
+                    const data = await response.json();
+                    console.log(`Loaded ${data.length} students:`, data);
+                    
+                    this.students = data;
                     this.renderStudentTable();
                 } catch (error) {
                     console.error('Error loading students:', error);
@@ -439,7 +464,9 @@
                 const tbody = document.getElementById('studentTableBody');
                 tbody.innerHTML = '';
                 
-                if (this.students.length === 0) {
+                console.log(`Rendering student table with ${this.students.length} students`);
+                
+                if (!this.students || this.students.length === 0) {
                     const row = document.createElement('tr');
                     const cell = document.createElement('td');
                     cell.colSpan = 5;
@@ -450,34 +477,39 @@
                     return;
                 }
                 
-                // Sort students by enrollment date (if available) or student_id
+                // Sort students by most recently enrolled first
+                // If no enrollment date, use student_id to approximate (higher ID = more recent)
                 const sortedStudents = [...this.students].sort((a, b) => {
                     if (a.enrollment_date && b.enrollment_date) {
                         return new Date(b.enrollment_date) - new Date(a.enrollment_date);
                     }
-                    return a.student_id.localeCompare(b.student_id);
+                    // If no enrollment dates, sort by student_id in descending order
+                    // This assumes newer students have higher IDs
+                    return parseInt(b.student_id || '0') - parseInt(a.student_id || '0');
                 });
                 
                 // Take only the most recent 10 students
                 const recentStudents = sortedStudents.slice(0, 10);
                 
+                console.log('Recent students to display:', recentStudents);
+                
                 recentStudents.forEach(student => {
                     const row = document.createElement('tr');
                     
                     const idCell = document.createElement('td');
-                    idCell.textContent = student.student_id;
+                    idCell.textContent = student.student_id || 'N/A';
                     
                     const nameCell = document.createElement('td');
-                    nameCell.textContent = student.name;
+                    nameCell.textContent = student.name || 'N/A';
                     
                     const usernameCell = document.createElement('td');
-                    usernameCell.textContent = student.username;
+                    usernameCell.textContent = student.username || 'N/A';
                     
                     const courseCell = document.createElement('td');
-                    courseCell.textContent = student.course;
+                    courseCell.textContent = student.course || 'N/A';
                     
                     const yearSectionCell = document.createElement('td');
-                    yearSectionCell.textContent = student.year_section;
+                    yearSectionCell.textContent = student.year_section || 'N/A';
                     
                     row.appendChild(idCell);
                     row.appendChild(nameCell);
@@ -491,49 +523,105 @@
 
             async enrollStudent() {
                 const form = document.getElementById('enrollmentForm');
-                const formData = new FormData(form);
+                let formData = new FormData(form);
+                
+                // If the student ID is not generated yet, generate it now
+                if (!formData.get('student_id')) {
+                    try {
+                        await this.generateAndDisplayStudentId();
+                        // Re-get the form data with the generated IDs
+                        formData = new FormData(form);
+                    } catch (error) {
+                        this.showStatus('Please generate a student ID first', 'error');
+                        return;
+                    }
+                }
                 
                 const studentData = {
                     name: formData.get('name'),
-                    email: formData.get('email'),
-                    username: formData.get('username'),
-                    password: formData.get('password'),
+                    username: formData.get('username') || formData.get('student_id'),
+                    password: formData.get('password') || formData.get('student_id'),
                     course: formData.get('course'),
-                    year_section: formData.get('year_section')
+                    year_section: formData.get('year_section'),
+                    student_id: formData.get('student_id')
                 };
+                
+                // Validate that we have all required fields
+                if (!studentData.name) {
+                    this.showStatus('Please enter a student name', 'error');
+                    return;
+                }
+                
+                if (!studentData.course) {
+                    this.showStatus('Please select a course', 'error');
+                    return;
+                }
+                
+                if (!studentData.year_section) {
+                    this.showStatus('Please select a year and section', 'error');
+                    return;
+                }
+                
+                if (!studentData.student_id) {
+                    this.showStatus('Please generate a student ID', 'error');
+                    return;
+                }
+                
+                console.log('Sending enrollment data:', studentData);
                 
                 try {
                     const response = await fetch('/api/professor/enroll', {
                         method: 'POST',
                         headers: { 
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(studentData)
                     });
                     
+                    if (!response.ok) {
+                        // Get more details about the error
+                        const errorText = await response.text();
+                        console.error('Enrollment API error:', response.status, errorText);
+                        let errorMessage = 'Enrollment failed';
+                        
+                        try {
+                            // Try to parse the error as JSON
+                            const errorJson = JSON.parse(errorText);
+                            errorMessage = errorJson.error || errorMessage;
+                        } catch (e) {
+                            // If parsing fails, use the raw error text
+                            errorMessage = errorText || errorMessage;
+                        }
+                        
+                        this.showStatus(`Enrollment failed: ${errorMessage}`, 'error');
+                        return;
+                    }
+                    
                     const result = await response.json();
                     
-                    if (response.ok) {
-                        this.showStatus(`Student enrolled successfully with ID: ${result.student_id}`, 'success');
+                    if (result.success) {
+                        // Use the student object from the API response
+                        const studentData = result.student;
                         
-                        // Display the auto-generated student ID in the form
-                        document.getElementById('student_id').value = result.student_id || '';
+                        this.showStatus(`Student enrolled successfully with ID: ${studentData.student_id}`, 'success');
+                        
+                        // Display the ID in the form
+                        document.getElementById('student_id').value = studentData.student_id || '';
                         
                         // Reset form except for the student_id field which displays the generated ID
                         const inputs = form.querySelectorAll('input:not(#student_id), select');
                         inputs.forEach(input => input.value = '');
                         
                         // Add the new student to our local array and refresh the table
-                        if (result.student) {
-                            this.students.unshift(result.student);
+                        if (studentData) {
+                            this.students.unshift(studentData);
                             this.renderStudentTable();
                         } else {
                             // If we didn't get a student object back, reload all students
                             this.loadStudents();
                         }
                     } else {
-                        this.showStatus(`Enrollment failed: ${result.message}`, 'error');
+                        this.showStatus(`Enrollment failed: ${result.error || 'Unknown error'}`, 'error');
                     }
                 } catch (error) {
                     console.error('Error enrolling student:', error);
@@ -554,7 +642,10 @@
                 reader.onload = async (e) => {
                     try {
                         const contents = e.target.result;
-                        const rows = contents.split('\n');
+                        console.log("CSV file contents:", contents); // Debug log
+                        
+                        // Split by newlines and filter out empty lines
+                        const rows = contents.split(/\r?\n/).filter(row => row.trim() !== '');
                         
                         if (rows.length < 2) {
                             this.showStatus('The CSV file appears to be empty or invalid', 'error');
@@ -563,26 +654,80 @@
                         
                         this.showStatus('Processing batch enrollment...', 'success');
                         
-                        // Skip header row if it exists
-                        const startRow = rows[0].includes('name,email') ? 1 : 0;
+                        // Process header row to identify column positions
+                        const headerRow = rows[0].toLowerCase();
+                        console.log("Header row:", headerRow); // Debug log
+                        
+                        const headers = headerRow.split(',').map(h => h.trim());
+                        const nameIndex = headers.indexOf('name');
+                        const usernameIndex = headers.indexOf('username');
+                        const passwordIndex = headers.indexOf('password');
+                        const courseIndex = headers.indexOf('course');
+                        const yearSectionIndex = headers.indexOf('year_section');
+                        
+                        // Verify all required fields are present
+                        if (nameIndex === -1 || usernameIndex === -1 || passwordIndex === -1 || 
+                            courseIndex === -1 || yearSectionIndex === -1) {
+                            console.error("Missing required columns. Header indexes:", {
+                                nameIndex, usernameIndex, passwordIndex, courseIndex, yearSectionIndex
+                            });
+                            this.showStatus('CSV file missing required columns. Please use the template format.', 'error');
+                            return;
+                        }
+                        
                         const students = [];
                         
-                        for (let i = startRow; i < rows.length; i++) {
+                        // Process data rows (skip header)
+                        for (let i = 1; i < rows.length; i++) {
                             const row = rows[i].trim();
                             if (!row) continue;
                             
-                            const cols = row.split(',');
-                            if (cols.length >= 6) {
-                                students.push({
-                                    name: cols[0].trim(),
-                                    email: cols[1].trim(),
-                                    username: cols[2].trim(),
-                                    password: cols[3].trim(),
-                                    course: cols[4].trim(),
-                                    year_section: cols[5].trim()
-                                });
+                            // Split the row by comma, but handle potential quoted values
+                            let cols = [];
+                            let inQuotes = false;
+                            let currentValue = '';
+                            
+                            for (let j = 0; j < row.length; j++) {
+                                const char = row[j];
+                                
+                                if (char === '"' && (j === 0 || row[j-1] !== '\\')) {
+                                    inQuotes = !inQuotes;
+                                } else if (char === ',' && !inQuotes) {
+                                    cols.push(currentValue.trim());
+                                    currentValue = '';
+                                } else {
+                                    currentValue += char;
+                                }
+                            }
+                            
+                            // Don't forget the last value
+                            cols.push(currentValue.trim());
+                            
+                            console.log(`Row ${i} columns:`, cols); // Debug log
+                            
+                            // Check if we have enough columns
+                            if (cols.length >= Math.max(nameIndex, usernameIndex, passwordIndex, courseIndex, yearSectionIndex) + 1) {
+                                const studentData = {
+                                    name: cols[nameIndex],
+                                    username: cols[usernameIndex],
+                                    password: cols[passwordIndex],
+                                    course: cols[courseIndex],
+                                    year_section: cols[yearSectionIndex]
+                                };
+                                
+                                // Validate that we have all required fields
+                                if (studentData.name && studentData.username && studentData.password && 
+                                    studentData.course && studentData.year_section) {
+                                    students.push(studentData);
+                                } else {
+                                    console.warn(`Skipping row ${i} due to missing required fields:`, studentData);
+                                }
+                            } else {
+                                console.warn(`Skipping row ${i} due to insufficient columns. Expected at least ${Math.max(nameIndex, usernameIndex, passwordIndex, courseIndex, yearSectionIndex) + 1}, got ${cols.length}`);
                             }
                         }
+                        
+                        console.log("Processed students:", students); // Debug log
                         
                         if (students.length === 0) {
                             this.showStatus('No valid student records found in the CSV file', 'error');
@@ -590,31 +735,134 @@
                         }
                         
                         // Send the batch to the server
-                        const response = await fetch('/api/admin/batch-enroll', {
+                        const response = await fetch('/api/professor/batch-enroll', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ students })
                         });
                         
-                        const result = await response.json();
-                        
-                        if (response.ok) {
-                            this.showStatus(`Successfully enrolled ${result.enrolled} students`, 'success');
-                            document.getElementById('batchEnrollmentForm').reset();
-                            document.getElementById('fileName').textContent = 'No file chosen';
-                            
-                            // Reload the student list
-                            this.loadStudents();
-                        } else {
-                            this.showStatus(`Batch enrollment failed: ${result.message}`, 'error');
+                        if (!response.ok) {
+                            // Log more details about the error response
+                            console.error("Server response status:", response.status);
+                            const errorText = await response.text();
+                            console.error("Server error response:", errorText);
+                            this.showStatus(`Batch enrollment failed. Server responded with status ${response.status}`, 'error');
+                            return;
                         }
+                        
+                        const result = await response.json();
+                        this.showStatus(`Successfully enrolled ${result.enrolled || students.length} students`, 'success');
+                        document.getElementById('batchEnrollmentForm').reset();
+                        document.getElementById('fileName').textContent = 'No file chosen';
+                        
+                        // Reload the student list
+                        this.loadStudents();
+                        
                     } catch (error) {
                         console.error('Error processing CSV file:', error);
-                        this.showStatus('Error processing the CSV file. Please check the format and try again.', 'error');
+                        this.showStatus('Error processing the CSV file: ' + error.message, 'error');
                     }
                 };
                 
+                reader.onerror = (error) => {
+                    console.error('Error reading CSV file:', error);
+                    this.showStatus('Error reading the CSV file', 'error');
+                };
+                
                 reader.readAsText(file);
+            }
+
+            downloadCSVTemplate() {
+                // Get the latest student ID first
+                this.getLatestStudentId().then(latestId => {
+                    const nextId = (parseInt(latestId) + 1).toString();
+                    
+                    // Create CSV content with header and example rows matching the format in the screenshot
+                    const csvContent = 
+`name,username,password,course,year_section
+# NOTE: Current latest student ID is ${latestId}. New students should start with ${nextId}
+# This note line will be ignored during import
+Kevin Llanes,${nextId},${nextId},BSCS,3A
+Gian Higino Fung,${(parseInt(nextId) + 1).toString()},${(parseInt(nextId) + 1).toString()},BSCS,3A
+Emmanuel Pabua,${(parseInt(nextId) + 2).toString()},${(parseInt(nextId) + 2).toString()},BSCS,3A
+Ervhyne Dalugdog,${(parseInt(nextId) + 3).toString()},${(parseInt(nextId) + 3).toString()},BSCS,3A`;
+                    
+                    // Create a Blob with the CSV content
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    
+                    // Create a URL for the Blob
+                    const url = URL.createObjectURL(blob);
+                    
+                    // Create a temporary link element to trigger download
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'enrollment_template.csv');
+                    link.style.display = 'none';
+                    
+                    // Add to the document, click, and remove
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    
+                    // Release the URL object
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                });
+            }
+            
+            async getLatestStudentId() {
+                try {
+                    const response = await fetch('/api/generate-student-id');
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch latest student ID');
+                    }
+                    const data = await response.json();
+                    
+                    // Update the student ID info on the page
+                    const message = document.getElementById('currentStudentIdMessage');
+                    if (message) {
+                        const latestId = (parseInt(data.studentId) - 1).toString();
+                        const nextId = data.studentId;
+                        message.textContent = `The latest used student ID is ${latestId}. New students should start with ${nextId}.`;
+                    }
+                    
+                    return data.studentId;
+                } catch (error) {
+                    console.error('Error fetching latest student ID:', error);
+                    
+                    // Update the student ID info with error
+                    const message = document.getElementById('currentStudentIdMessage');
+                    if (message) {
+                        message.textContent = 'Unable to fetch latest student ID. Please check with an administrator.';
+                    }
+                    
+                    return "20250001"; // Default starting ID if API fails
+                }
+            }
+
+            async generateAndDisplayStudentId() {
+                const studentIdField = document.getElementById('student_id');
+                const usernameField = document.getElementById('username');
+                const passwordField = document.getElementById('password');
+                
+                try {
+                    const response = await fetch('/api/generate-student-id');
+                    if (!response.ok) {
+                        throw new Error('Failed to generate student ID');
+                    }
+                    
+                    const data = await response.json();
+                    const newStudentId = data.studentId;
+                    
+                    // Set the student ID, username, and password fields
+                    studentIdField.value = newStudentId;
+                    usernameField.value = newStudentId;
+                    passwordField.value = newStudentId;
+                    
+                    this.showStatus(`Generated student ID: ${newStudentId}`, 'success');
+                } catch (error) {
+                    console.error('Error generating student ID:', error);
+                    this.showStatus('Failed to generate student ID. Please try again.', 'error');
+                }
             }
 
             showStatus(message, type) {
